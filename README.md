@@ -1,2 +1,4 @@
 # TeamCar
-Apartment resident vehicle management system based on Python.
+
+Apartment resident vehicle management system based on Python
+
