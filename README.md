@@ -1,2 +1,2 @@
 # TeamCar
-miniproject
+Apartment resident vehicle management system based on Python.
