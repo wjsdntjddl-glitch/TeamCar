@@ -1,3 +1,6 @@
+[![CodeQL Analysis](https://github.com/wjsdntjddl-glitch/TeamCar/actions/workflows/codeql.yml/badge.svg)](https://github.com/wjsdntjddl-glitch/TeamCar/actions/workflows/codeql.yml)
+[![Dependency Review](https://github.com/wjsdntjddl-glitch/TeamCar/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/wjsdntjddl-glitch/TeamCar/actions/workflows/dependency-review.yml)
+
 # TeamCar
 
 Apartment resident vehicle management system based on Python.
