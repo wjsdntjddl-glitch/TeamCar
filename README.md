@@ -14,10 +14,11 @@ Apartment resident vehicle management system based on Python.
 ```
 cd "PATH_TO_REPO\"
 python -m venv .venv
+.venv\Scripts\activate
 ```
-Then restart the terminal to ensure working on virutal setup.
 
 Follow the next step to upgrade pip and installing dependencies.
+
 ```
 python -m pip install --upgrade pip
 pip install -e .
