@@ -13,6 +13,7 @@ cd "PATH_TO_REPO\"
 python -m venv .venv
 ```
 Then restart the terminal to ensure working on virutal setup.
+
 Follow the next step to upgrade pip and installing dependencies.
 ```
 python -m pip install --upgrade pip
