@@ -12,9 +12,13 @@ class Car:
         self.park_in = park_in
         self.park_out = park_out
 
+    def show_info(self):
+        print(f'{self.number}/{self.name}')
+
 
 def main():
-    pass
+    car1 = Car("12가 3456","전우성","010-1234-5678","포터","흰색",True,False,[{"time":"2026-10-21 17:00:00","reason":"세탁기고장as"}],["2026-10-22 18:00:00"])
 
+    car1.show_info()
 if __name__ == "__main__":
     main()
