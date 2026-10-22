@@ -38,6 +38,15 @@ class System:
     def seq_manage(self):
         pass
 
+    def seq_manage_register(self):
+        pass
+    
+    def seq_manage_modify(self):
+        pass
+
+    def seq_manage_remove(self):
+        pass
+
     def seq_calc(self):
         pass
 
