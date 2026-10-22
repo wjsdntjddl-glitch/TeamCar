@@ -5,6 +5,9 @@ class CarManager:
     def __init__(self):
         self.data = {}
 
+    def save(self):
+        pass
+
     def load(self):
         # 불러올 파일에 담긴 내용 예시
         file_string = """ 
@@ -40,6 +43,7 @@ class CarManager:
             {"time": "2026-10-19 15:00:00", "reason": "식기세척기 고장 AS 방문"},
         ]
         park_out = ["2026-10-19 11:35:00"]
+        
 
         # self.data 딕셔너리에 Car 클래스의 객체를
         # 차량 번호를 key로 하여 추가
@@ -49,3 +53,10 @@ class CarManager:
 
 
 car_manager = CarManager()
+
+def main():
+    print(car_manager.__dict__)
+
+
+if __name__ == "__main__":
+    main()

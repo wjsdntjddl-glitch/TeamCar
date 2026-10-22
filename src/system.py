@@ -32,20 +32,36 @@ class System:
             case 3:  # 주차 요금 계산
                 self.seq_calc()
 
+
     def seq_view(self):
         pass
 
-    def seq_manage(self):
-        pass
+    def seq_manage(self):  # 차량 관리
+        console.show_manage_menu()
+        print("\n> ", end="")
+        user_input = int(input())
 
-    def seq_manage_register(self):
-        pass
-    
-    def seq_manage_modify(self):
-        pass
+        match user_input:
+            case 0:  # 뒤로
+                return self.seq_start()
+            case 1:  # 차량 정보 등록
+                self.seq_manage_register()
+            case 2:  # 차량 정보 수정
+                self.seq_manage_modify()
+            case 3:  # 차량 정보 삭제
+                self.seq_manage_remove()
 
-    def seq_manage_remove(self):
-        pass
+    def seq_manage_register(self):  # 차량 정보 등록
+        console.show_manage_register()     
+        return system.seq_start()
+
+    def seq_manage_modify(self):  # 차량 정보 수정
+        console.show_manage_modify()
+        return system.seq_start()
+
+    def seq_manage_remove(self):  # 차량 정보 삭제
+        console.show_manage_remove()
+        return system.seq_start()
 
     def seq_calc(self):
         pass
