@@ -1,4 +1,4 @@
-import car
+from car import Car
 
 
 class CarManager:
