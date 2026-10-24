@@ -1,51 +1,71 @@
 from enum import Enum
 
 
-class CarType(Enum):
+# 차량 유형을 정의하는 클래스
+class CarType(Enum): 
     RESIDENT = "입주민 차량"
     EXTERNAL = "외부 차량"
     SPECIAL = "특수 차량"
 
 
 class Car:
-    def __init__(self, number, name, phone, model, color, parking, type, park_in = None, out = None):
+    def __init__(
+        self,
+        number,
+        name,
+        phone,
+        model,
+        color,
+        parking,
+        car_type,
+    ):
         self.number = number      # 차량 번호
         self.name = name          # 차주 성함
         self.phone = phone        # 차주 연락처
         self.model = model        # 차량 회사
         self.color = color        # 차량 색상
         self.parking = parking    # 주차 여부 (True 또는 False)
-        
-        # 외부에서 "입주민 차량"이라는 글자가 들어오면, 위에서 만든 CarType(Enum)으로 변환해 저장합니다.
-        if isinstance(type, str):
-            self.type = CarType(type)
-        else:
-            self.type = type
-
-        
-
-        self.park_in = park_in if park_in is not None else []
-        self.out = out if out is not None else []
+        self.car_type = car_type  # 방문 유형
 
 
-##############
-# 입출차 기록 #
-##############
+        self.park_in = []
+        self.out = []
 
-    # 입차 기록을 딕셔너리 형태로 배열에 추가
-    def add_park_in_record(self, time_str, reason_str=None):
-        
-        # 입주민 차량일 경우 사유(reason)를 강제로 None 처리
-        if self.type == CarType.RESIDENT:
-            final_reason = None
-        else:
-            final_reason = reason_str
+
+    # 외부 차량인 경우에만 reason받기
+    def add_park_in(self, time, reason=None):
+        if self.car_type in (CarType.RESIDENT, CarType.SPECIAL):
+            reason = None
+
+        elif self.car_type == CarType.EXTERNAL:
             
+            if not isinstance(reason, str):
+                raise TypeError("한글 또는 영어로 입력해 주세요.")
+
+            if reason is None or not reason.strip():
+                raise ValueError("방문 사유를 입력해 주세요.")
+
+
         self.park_in.append({
-            "time": time_str,
-            "reason": final_reason
+            "time": time,
+            "reason": reason,
         })
 
-    # 출차 기록(문자열)을 배열에 추가
-    def add_out_record(self, time_str):
-        self.out.append(time_str)
+
+    def add_out(self, time):
+        self.out.append(time)
+
+    @staticmethod
+    def json_default(obj):
+        if isinstance(obj, Car):
+            return {
+                "name": obj.name,
+                "phone": obj.phone,
+                "model": obj.model,
+                "color": obj.color,
+                "parking": obj.parking,
+                "resident": obj.resident,
+                "car_type": obj.car_type.value,
+                "park_in": obj.park_in,
+                "out": obj.out,
+            }
