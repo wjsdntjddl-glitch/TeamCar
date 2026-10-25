@@ -29,7 +29,7 @@ class Car:
 
 
         self.park_in = []
-        self.out = []
+        self.park_out = []
 
 
     # 외부 차량인 경우에만 reason받기
@@ -64,8 +64,7 @@ class Car:
                 "model": obj.model,
                 "color": obj.color,
                 "parking": obj.parking,
-                "resident": obj.resident,
                 "car_type": obj.car_type.value,
                 "park_in": obj.park_in,
-                "out": obj.out,
+                "park_out": obj.park_out,
             }
