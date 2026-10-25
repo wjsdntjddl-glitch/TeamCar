@@ -1,8 +1,9 @@
 import re
 from car import Car
+import car_manager
 
-from car_manager import car_manager
 from console import console
+import src
 
 
 class System:
@@ -91,5 +92,8 @@ class System:
         car_manager.load()
         print(car_manager.data["경기12나3456"].name)
 
+
+if __name__ == "__main__":
+    src()
 
 system = System()
