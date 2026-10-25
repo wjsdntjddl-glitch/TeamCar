@@ -1,9 +1,8 @@
 import re
+import json
 from car import Car, CarType
 from datetime import datetime
-# import json
 from car_manager import car_manager
-
 from console import console
 
 
@@ -32,6 +31,7 @@ class System:
             console.clear()
             print("[Error] 숫자를 입력해주십시오.")
             return self.seq_start()
+        
         # value에러 발생시
         except ValueError:
             console.clear()
@@ -179,4 +179,6 @@ class System:
     #     print(car_manager.data["경기12나3456"].name)
 
 
-system = System()
+if __name__ == "__main__":
+    system = System()
+    system.seq_start()
