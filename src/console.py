@@ -12,6 +12,7 @@ class Console:
 # 시작 화면 #
 ############
     def show_start_menu(self) -> None:
+        """시작 화면"""
         print(" ")
         print("차량 관리 시스템")
         print("도움말: 숫자를 입력해 메뉴에 접근합니다. ex) 조회시 1 입력")
@@ -22,9 +23,6 @@ class Console:
         print("3. 계산")
         print("\n> ", end="")
 
-
-   
-
-
 console = Console()
+
 
