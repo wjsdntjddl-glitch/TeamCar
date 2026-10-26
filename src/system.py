@@ -53,6 +53,7 @@ class System:
 # 주차 요금 계산 #
 ################
     def seq_calc(self, car):
+        console.show_calc() # console.py의 어떤함수를 호출?
 
         # 입주민 차량과 특수 차량은 무료
         if car.car_type in (CarType.RESIDENT, CarType.SPECIAL):
