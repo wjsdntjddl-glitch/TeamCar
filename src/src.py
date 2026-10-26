@@ -1,5 +1,5 @@
-# from system import system
-# from utils.logger import logger
+from system import system
+from utils.logger import logger
 
 
 # 프로그램 시작
