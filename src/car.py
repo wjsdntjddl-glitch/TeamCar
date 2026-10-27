@@ -1,13 +1,6 @@
 import re
 from datetime import datetime
-from enum import Enum
- 
- 
-class CarType(Enum):
-    RESIDENT = "입주민 차량"
-    GUEST = "외부 차량"
-    SPECIAL = "특수 차량"
- 
+
  
 class Car:
  
@@ -19,11 +12,7 @@ class Car:
         name: str,
         phone: str,
         model: str,
-        color: str,
-        type: CarType | str = CarType.RESIDENT,
-        park_in: list | None = None,
-        park_out: list | None = None,
-    ) -> None:
+        color: str) -> None:
  
 
         self.number = number
@@ -31,14 +20,6 @@ class Car:
         self.phone = phone
         self.model = model
         self.color = color
-        self.type = type  
-        self.__park_in = [] # Car 클래스 밖에서 접근 불가
-        self.__park_out = [] #setter를 통해서만 바꿀 수 있음.
-        
-        # park_in에 값이 없으면 빈 리스트로 초기화
-        self.park_in = [] if park_in is None else park_in  # park_out보다 먼저 넣는다.
-        self.park_out = [] if park_out is None else park_out
-        # 출차 시각이 입차 시각보다 빠르면 ValueError가 발생한다.
 
 
     ####################
@@ -76,17 +57,14 @@ class Car:
     #####################
     @number.setter
     def number(self, value: str) -> None:
-        if isinstance(value, str):
-            value = "".join(value.split())  # 공백 제거
-        if not Car.validate_number(value):
-            raise ValueError("차량 번호를 다시 입력해주십시오.(예: 서울12가3456)")
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError("차량 번호를 정확히 입력해주십시오.(예: 12가3456)")
         self.__number = value
- 
+
+ ####### 보완 ######
     @name.setter
     def name(self, value: str) -> None:
-        if isinstance(value, str):
-            value = value.strip()
-        if not Car.validate_name(value):
+        if not isinstance(value, str) or not value.strip():
             raise ValueError("이름은 한글, 영문, 숫자 2~20자로 입력해주십시오.")
         self.__name = value
  
@@ -97,9 +75,9 @@ class Car:
         if not Car.validate_phone(value):
             raise ValueError("연락처를 정확히 입력해주십시오. (예: 010-1234-5678)")
         if len(value) == 11:
-            value = f"{value[:3]}-{value[3:7]}-{value[7:]}"
+            value = value[:3] + "-" + value[3:7] + "-" + value[7:]
         else:
-            value = f"{value[:3]}-{value[3:6]}-{value[6:]}"
+            value = value[:3] + "-" + value[3:6] + "-" + value[6:]
         self.__phone = value
 
     @model.setter
@@ -118,18 +96,7 @@ class Car:
             raise ValueError("색상은 한글 또는 영문 10자 이하로 입력해주십시오.")
         self.__color = value
 
- ########## 논의해서 수정 ########
-    @type.setter
-    def type(self, value: CarType | str) -> None:
-        if isinstance(value, str):  # "입주민 차량" / "입주민차량" 둘 다 받는다
-            for car_type in CarType:
-                if car_type.value.replace(" ", "") == value.replace(" ", ""):
-                    value = car_type
-                    break
-        if not isinstance(value, CarType):
-            raise ValueError("차량 종류는 입주민 차량, 외부 차량, 특수 차량 중 하나여야 합니다.")
-        self.__type = value
- 
+
     
     ##############
     # 값 검사 함수 #
@@ -160,34 +127,6 @@ class Car:
         """색상 검증: 한글/영문 1~10자"""
         return isinstance(color, str) and re.fullmatch(r"[가-힣A-Za-z]{1,10}", color) is not None
  
-    @staticmethod
-    def validate_time(time) -> bool:
-        """시각 검증: '2026-10-19 09:25:00' 또는 '2026-10-19 09:25' (실제로 있는 날짜/시각만)"""
-        if not isinstance(time, str):
-            return False
-        time = time.strip()
-        if re.fullmatch(r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:[0-5]\d)?", time, re.ASCII) is None:
-            return False
-        try:
-            datetime.strptime(time[:16], "%Y-%m-%d %H:%M")  # 13월, 25시 같은 값을 걸러낸다
-        except ValueError:
-            return False
-        return True
- 
-    @staticmethod
-    def _check_order(in_times: list, out_times: list) -> None:
-        """입차/출차 시각이 '입차 -> 출차 -> 입차 -> ...' 순서와 개수에 맞는지 검사한다."""
-        if len(out_times) > len(in_times):
-            raise ValueError("출차 기록이 입차 기록보다 많습니다.")
-        previous = ""
-        for index, in_time in enumerate(in_times):
-            if in_time < previous:
-                raise ValueError("입차 시각이 직전 기록보다 빠릅니다.")
-            previous = in_time
-            if index < len(out_times):
-                if out_times[index] < previous:
-                    raise ValueError("출차 시각이 입차 시각보다 빠릅니다.")
-                previous = out_times[index]
  
     ##################
     # JSON 변환 / 출력 #
@@ -195,33 +134,28 @@ class Car:
     def to_dict(self) -> dict:
         """Car 객체를 JSON에 저장할 딕셔너리로 반환 (차량 번호는 JSON의 이름표라서 빠진다)"""
         return {
+            "number": self.number, 
             "name": self.name,  
             "phone": self.phone,
             "model": self.model,
-            "color": self.color,
-            "parking": "입차" if self.parking else "출차",
-            "type": self.type.value,
-            "park_in": self.park_in,
-            "park_out": self.park_out,
+            "color": self.color
         }
  
     @classmethod
     def from_dict(cls, number, data: dict) -> "Car":
-        """dict 데이터를 Car 객체로 변환. 'parking'은 기록에서 계산하므로 무시한다."""
+        """dict 데이터를 Car 객체로 변환"""
         if not isinstance(data, dict):
             raise ValueError("차량 정보 형식이 올바르지 않습니다.")
-        for key in ("name", "phone", "model", "color", "type"):
+        
+        for key in ("number","name", "phone", "model", "color"):
             if key not in data:
-                raise ValueError(f"필수 항목이 없습니다: {key}")
+                raise ValueError(f"데이터가 누락되었습니다: {key}")
         return cls(
-            number=number,
+            number=data["number"],
             name=data["name"],
             phone=data["phone"],
             model=data["model"],
-            color=data["color"],
-            type=data["type"],
-            park_in=data.get("park_in"),
-            park_out=data.get("park_out"),
+            color=data["color"]
         )
  
     @staticmethod
@@ -238,23 +172,20 @@ class Car:
             f"phone={self.__phone!r}, "
             f"model={self.__model!r}, "
             f"color={self.__color!r}, "
-            f"type={self.__type.value!r}, "
-            f"parking={self.parking!r})"
         )
  
+ ### 이부분은 src.py에
+# def main():
+#     car = Car("서울12가3456", "이상무", "010-0000-0000", "현대", "하얀색")
+#     print(car)
+#     print(car.to_dict())
  
-def main():
-    car = Car("서울12가3456", "이상무", "010-0000-0000", "현대", "하얀색")
-    car.park_in = [{"time": "2026-10-19 09:25:00", "reason": None}]
-    print(car)
-    print(car.to_dict())
- 
-    try:
-        car.phone = "abc"
-    except ValueError as error:
-        print("잘못된 연락처:", error)
+#     try:
+#         car.phone = "abc"
+#     except ValueError as error:
+#         print("잘못된 연락처:", error)
  
  
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
  
