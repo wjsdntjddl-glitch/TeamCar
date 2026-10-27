@@ -94,13 +94,13 @@ class System:
 
  
     def seq_calc(self) -> None:
-        """주차 요금 계산: 차량 번호를 입력받아 마지막 입차 ~ 출차(또는 현재) 시간으로 요금을 계산"""
-        # TODO: console.show_calc()가 만들어지면 아래 print 4줄을 교체한다.
-        print(" ")
-        print("차량 관리 시스템 - (주차 요금 계산)")
-        print("도움말: 차량 번호를 입력하세요 ex) 서울12가3456 (0 입력 시 뒤로)")
-        print("\n> ", end="")
+        """주차요금 계산"""
+        console.show_calc()
         user_input = input().strip()
+
+        if user_input == "0":
+            console.clear()
+            return
 
         pattern = r"[가-힣]{2}\d{2,3}[가-힣]\d{4}"
         
@@ -121,14 +121,16 @@ class System:
             return self.seq_calc()
 
         # 입차 시간: 마지막 입차 기록 / 출차 시간: 마지막 출차 기록 (아직 주차 중이면 지금)
-        car_data_in = car["park_in"][-1]["time"]
-        start = datetime.strptime(car_data_in, "%Y-%m-%d %H:%M:%S")
+        last_park_in = car["park_in"][-1]["time"]
+        start = datetime.strptime(last_park_in, "%Y-%m-%d %H:%M:%S")
+       
         if car["parking"] == "입차":
             end = datetime.now()
         else:
-            end = datetime.strptime(car["park_out"][-1], "%Y-%m-%d %H:%M:%S")
-
+            last_park_out = car["park_out"][-1]
+            end = datetime.strptime(last_park_out, "%Y-%m-%d %H:%M:%S")
         seconds = (end - start).total_seconds()
+       
         if seconds < 0:
             console.clear()
             print("[Error] 입차 시각이 현재 시각보다 늦어 계산할 수 없습니다.")
@@ -142,11 +144,7 @@ class System:
             fee = 0
 
         console.clear()
-        print(f"대상: {user_input} ({car['type']})")
-        print(f"입차: {start.strftime('%Y-%m-%d %H:%M')}")
-        print("출차: " + ("주차 중 (현재 시각 기준)" if car["parking"] == "입차" else end.strftime("%Y-%m-%d %H:%M")))
-        print(f"주차 시간: {minutes}분")
-        print(f"요금: {fee:,}원" if car["type"] == "외부 차량" else "요금: 무료 (외부 차량만 요금이 부과됩니다)")
+        console.show_calc_result(car, start, end, minutes, fee)
         logger.log(f"요금 계산 [{user_input}] {fee}원", logger.Level.INFO)
  
 
