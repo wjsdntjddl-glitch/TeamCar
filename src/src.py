@@ -1,9 +1,8 @@
 from system import system
-from utils.logger import logger
 
 
 def main():
-    logger.log("프로그램 시작", logger.Level.DEBUG)
+    system.seq_load()
     system.seq_start()
 
 

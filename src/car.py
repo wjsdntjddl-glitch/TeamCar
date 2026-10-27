@@ -156,7 +156,7 @@ class Car:
         return isinstance(model, str) and 1 <= len(model) <= 30
  
     @staticmethod
-    def validate_color(color) -> bool:
+    def validate_color(color) -> bool: # len()
         """색상 검증: 한글/영문 1~10자"""
         return isinstance(color, str) and re.fullmatch(r"[가-힣A-Za-z]{1,10}", color) is not None
  

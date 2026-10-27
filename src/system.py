@@ -52,13 +52,8 @@ class System:
             except (EOFError, KeyboardInterrupt):
                 # Ctrl+C / Ctrl+D 로 입력이 끊긴 경우 -> 정상 종료 처리
                 print()
-                logger.log("입력 중 종료 신호를 받았습니다.", logger.Level.INFO)
                 self.seq_end()
-            except Exception as error:  # 예상하지 못한 오류로 프로그램이 꺼지지 않게 한다.
-                logger.log(
-                    f"예상하지 못한 오류: {error!r}\n{traceback.format_exc()}",
-                    logger.Level.ERROR,
-                )
+            except Exception as error:  # 예상하지 못한 오류로 프로그램이 꺼지지 않게 한다.)
                 console.clear()
                 print("[Error] 알 수 없는 오류가 발생했습니다. 다시 시도해주십시오.")
 
@@ -79,7 +74,6 @@ class System:
         if self._load_ok and not car_manager.save():
             print(f"[Error] {car_manager.last_error}")
         print("프로그램을 종료합니다.")
-        logger.log("프로그램 종료", logger.Level.INFO)
         self._running = False
 
  
