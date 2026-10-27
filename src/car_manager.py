@@ -1,10 +1,8 @@
 import json
 import os
-import shutil
 from pathlib import Path
- 
 from car import Car
-from utils.logger import logger
+
  
 # 프로젝트 맨 위 폴더(TeamCar)의 out/data.json
 # 파일 위치를 기준으로 잡았기 때문에 어느 폴더에서 실행해도 같은 곳에 저장된다.
@@ -20,44 +18,40 @@ class CarManager:
     #     return car.number in self.data
  
     def save(self) -> bool:
-        """data.json에 저장한다. 성공하면 True, 실패하면 False(원인은 last_error)."""
+        """data.json에 저장 (성공하면 True, 실패하면 False)"""
         self.last_error = ""
-        temp_path = self.path.with_name(self.path.name + ".tmp")
+        
         try:
-            for key, car in self.data.items():
-                if not isinstance(car, Car) or key != car.number:
-                    raise ValueError(f"저장할 수 없는 항목입니다: {key}")
- 
             self.path.parent.mkdir(parents=True, exist_ok=True)
-            # 임시 파일에 먼저 쓰고, 끝까지 성공하면 진짜 파일과 바꾼다.
-            # (쓰다가 실패해도 기존 data.json이 망가지지 않는다.)
-            with temp_path.open("w", encoding="utf-8") as file:
-                json.dump(
+        # out 폴더가 없으면 만들어줌./파일이 들어갈 폴더/이미 있어도 에러안남
+
+            # 이 블록이 끝나면 파일을 자동으로 닫아줌.
+            with self.path.open("w", encoding="utf-8") as file:
+                json.dump(       # 기존에 있던 data.json을 덮어씀.
                     self.data,
                     file,
                     default=Car.json_default,
                     indent=4,
                     ensure_ascii=False,
                 )
-            os.replace(temp_path, self.path)
-        except (OSError, TypeError, ValueError) as error:
-            try:
-                temp_path.unlink(missing_ok=True)
-            except OSError:
-                pass
-            self.last_error = (
-                "차량 정보를 저장하지 못했습니다. 파일 접근 권한과 저장 공간을 확인해주십시오."
-            )
-            logger.log(f"JSON 저장 오류: {error!r}", logger.Level.ERROR)
+        except (OSError, TypeError):
+            self.last_error = "차량 정보를 저장하지 못했습니다."
+           
             return False
- 
-        logger.log(f"차량 정보 저장 완료 ({len(self.data)}대)", logger.Level.DEBUG)
+
         return True
+         
  
     def load(self) -> bool:
-        DATA_FILE = Path("out") /"data  .json"
+        DATA_FILE = Path("out") /"data.json"
         
         with DATA_FILE.open("r", encoding="utf-8") as file:
-            pass
+            json_data = json.load(file)
+            print(json_data)
+
+            for key in json_data:
+                car_data = json_data[key]
+                car = Car.from_dict(key, car_data)
+                self.data.append(car)
  
 car_manager = CarManager()
