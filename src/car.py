@@ -69,26 +69,7 @@ class Car:
         """차량 색상"""
         return self.__color
  
-    @property
-    def parking(self) -> bool:
-        """입차된 차량이면 True (입차 기록 > 출차 기록인 경우)"""
-        return len(self.__park_in) > len(self.__park_out)
-    
-    @property
-    def type(self) -> CarType:
-        """차량 종류: 입주민 차량 / 외부 차량 / 특수 차량"""
-        return self.__type
- 
-    @property
-    def park_in(self) -> list:
-        """입차 기록 [{"time": 시각, "reason": 사유}, ...] (복사본을 돌려준다)"""
-        return [dict(record) for record in self.__park_in]
- 
-    @property
-    def park_out(self) -> list:
-        """출차 기록 ["시각", ...] (복사본을 돌려준다)"""
-        return list(self.__park_out)
- 
+
  
     #####################
     # Setter: 속성값 변경 #
@@ -149,52 +130,7 @@ class Car:
             raise ValueError("차량 종류는 입주민 차량, 외부 차량, 특수 차량 중 하나여야 합니다.")
         self.__type = value
  
-    @park_in.setter
-    def park_in(self, value: list) -> None:
-        """입차 기록 전체를 바꾼다. 기록 하나는 {"time": "2026-10-19 09:25", "reason": "사유"}"""
-        if not isinstance(value, list):
-            raise ValueError("입차 기록은 목록 형태여야 합니다.")
- 
-        checked = []
-        for record in value:
-            if not isinstance(record, dict) or not Car.validate_time(record.get("time")):
-                raise ValueError("입차 시각 형식이 올바르지 않습니다. (예: 2026-10-19 09:25:00)")
-            time = record["time"].strip()
-            if len(time) == 16:  # "2026-10-19 09:25" -> 초를 붙여서 통일
-                time += ":00"
- 
-            reason = record.get("reason")
-            if reason is not None:
-                if not isinstance(reason, str):
-                    raise ValueError("입차 사유는 글자로 입력해주십시오.")
-                reason = reason.strip() or None  # 빈 글자는 사유 없음(None)
-            if reason is None and self.type is not CarType.RESIDENT:
-                raise ValueError("입차 사유를 입력해주십시오.")  # 외부/특수 차량은 필수
-            if reason is not None and len(reason) > 50:
-                raise ValueError("입차 사유는 50자 이하로 입력해주십시오.")
-            checked.append({"time": time, "reason": reason})
- 
-        Car._check_order([record["time"] for record in checked], self.__park_out)
-        self.__park_in = checked
- 
-    @park_out.setter
-    def park_out(self, value: list) -> None:
-        """출차 기록 전체를 바꾼다. 기록 하나는 "2026-10-19 11:35" 같은 시각 글자"""
-        if not isinstance(value, list):
-            raise ValueError("출차 기록은 목록 형태여야 합니다.")
- 
-        checked = []
-        for time in value:
-            if not Car.validate_time(time):
-                raise ValueError("출차 시각 형식이 올바르지 않습니다. (예: 2026-10-19 11:35:00)")
-            time = time.strip()
-            if len(time) == 16:
-                time += ":00"
-            checked.append(time)
- 
-        Car._check_order([record["time"] for record in self.__park_in], checked)
-        self.__park_out = checked
- 
+    
     ##############
     # 값 검사 함수 #
     ##############
