@@ -98,6 +98,7 @@ class System:
         console.show_calc()
         user_input = input().strip()
 
+########## 여쭤보기 주차요금 화면에서도 0입력하면 돌아가게? ##########
         if user_input == "0":
             console.clear()
             return
@@ -120,16 +121,17 @@ class System:
             print("[Error] 입차 기록이 없는 차량입니다.")
             return self.seq_calc()
 
-        # 입차 시간: 마지막 입차 기록 / 출차 시간: 마지막 출차 기록 (아직 주차 중이면 지금)
+
+        # 입차 시간: 마지막 입차 기록 / 출차 시간: 마지막 출차 기록 (주차 중이면 지금)
         last_park_in = car["park_in"][-1]["time"]
-        start = datetime.strptime(last_park_in, "%Y-%m-%d %H:%M:%S")
+        park_in_time = datetime.strptime(last_park_in, "%Y-%m-%d %H:%M:%S")
        
         if car["parking"] == "입차":
-            end = datetime.now()
+            park_out_time = datetime.now()
         else:
             last_park_out = car["park_out"][-1]
-            end = datetime.strptime(last_park_out, "%Y-%m-%d %H:%M:%S")
-        seconds = (end - start).total_seconds()
+            park_in_time = datetime.strptime(last_park_out, "%Y-%m-%d %H:%M:%S")
+        seconds = (park_out_time - last_park_in).total_seconds()
        
         if seconds < 0:
             console.clear()
@@ -144,7 +146,7 @@ class System:
             fee = 0
 
         console.clear()
-        console.show_calc_result(car, start, end, minutes, fee)
+        console.show_calc_result(car, last_park_in, park_in_time, minutes, fee)
         logger.log(f"요금 계산 [{user_input}] {fee}원", logger.Level.INFO)
  
 
