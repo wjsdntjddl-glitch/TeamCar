@@ -1,11 +1,38 @@
-from car import cars
+import json
+import os
+from car import Car
 from wcwidth import wcswidth
+
+# car.json 파일 경로
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+JSON_PATH = os.path.join(BASE_DIR, "car.json")
+
+# JSON 파일 읽기
+with open(JSON_PATH, "r", encoding="utf-8") as file:
+    data = json.load(file)
+
+# JSON 데이터를 Car 객체로 변환
+cars = []
+
+for item in data:
+    car = Car(
+        item["number"],
+        item["name"],
+        item["phone"],
+        item["model"],
+        item["color"],
+        None,
+        None,
+        None,
+        None
+    )
+    cars.append(car)
 
 class Console:
     def __init__(self):
         self.page = 1  # 현재 페이지
         self.page_size = 3  # 한 페이지에 출력할 차량 수
-        self.widths = [14, 10, 17, 10, 8, 10, 12]
+        self.widths = [14, 10, 17, 20, 8]
 
     def align_text(self, text, width):
         text = str(text)
@@ -40,7 +67,7 @@ class Console:
         print("2. 차량 상세 조회")
         print("3. 차량 제조회사 기준 조회")
         print("4. 차주 이름으로 차량 조회")
-        print("5. 입차 차량 조회 (시간별)")
+        # print("5. 입차 차량 조회 (시간별)")
         print(" ")
 
     def show_view_all(self): # 전체 조회 화면
@@ -62,7 +89,7 @@ class Console:
 
             headers = [
                 "번호", "이름", "연락처", "차종",
-                "색상", "상태", "외부 차량"
+                "색상" #, "상태", "외부 차량"
             ]
 
             self.print_row(headers)
@@ -79,8 +106,8 @@ class Console:
                     car.phone,
                     car.model,
                     car.color,
-                    "입차" if car.parking else "출차",
-                    "N" if car.type == "입주민" else "Y"
+                    # "입차" if car.parking else "출차",
+                    # "N" if car.type == "입주민" else "Y"
                 ]
 
                 self.print_row(values)
@@ -138,11 +165,11 @@ class Console:
                 print(f"연락처    : {car.phone}")
                 print(f"차종      : {car.model}")
                 print(f"색상      : {car.color}")
-                print(f"상태      : {'입차' if car.parking else '출차'}")
-                print(f"외부 차량 : {'N' if car.type == '입주민' else 'Y'}")
-                print(f"차량 구분 : {car.type}")
-                print(f"입차 시간 : {car.park_in}")
-                print(f"출차 시간 : {car.park_out if car.park_out else '-'}")
+                # print(f"상태      : {'입차' if car.parking else '출차'}")
+                # print(f"외부 차량 : {'N' if car.type == '입주민' else 'Y'}")
+                # print(f"차량 구분 : {car.type}")
+                # print(f"입차 시간 : {car.park_in}")
+                # print(f"출차 시간 : {car.park_out if car.park_out else '-'}")
                 print()
                 return
 
@@ -177,7 +204,7 @@ class Console:
 
         headers = [
             "번호", "이름", "연락처", "차종",
-            "색상", "상태", "외부 차량"
+            "색상" #, "상태", "외부 차량"
         ]
 
         self.print_row(headers)
@@ -189,8 +216,8 @@ class Console:
                 car.phone,
                 car.model,
                 car.color,
-                "입차" if car.parking else "출차",
-                "N" if car.type == "입주민" else "Y"
+                # "입차" if car.parking else "출차",
+                # "N" if car.type == "입주민" else "Y"
             ]
 
             self.print_row(values)
@@ -223,7 +250,7 @@ class Console:
 
         headers = [
             "번호", "이름", "연락처", "차종",
-            "색상", "상태", "외부 차량"
+            "색상" #, "상태", "외부 차량"
         ]
 
         self.print_row(headers)
@@ -235,8 +262,8 @@ class Console:
                 car.phone,
                 car.model,
                 car.color,
-                "입차" if car.parking else "출차",
-                "N" if car.type == "입주민" else "Y"
+                # "입차" if car.parking else "출차",
+                # "N" if car.type == "입주민" else "Y"
             ]
 
             self.print_row(values)
@@ -244,87 +271,87 @@ class Console:
 
     
     
-    def show_view_entered_between(self): # 입차 차량 조회 화면
-        from datetime import datetime
+    # def show_view_entered_between(self): # 입차 차량 조회 화면
+    #     from datetime import datetime
 
-        print()
-        print("차량 관리 시스템 - (입차/출차 시간별 조회)")
-        print("도움말: 조회할 시작 시간과 종료 시간을 입력하세요.")
-        print("입력 형식: YYYY-MM-DD HH:MM")
-        print("0. 뒤로")
-        print()
+    #     print()
+    #     print("차량 관리 시스템 - (입차/출차 시간별 조회)")
+    #     print("도움말: 조회할 시작 시간과 종료 시간을 입력하세요.")
+    #     print("입력 형식: YYYY-MM-DD HH:MM")
+    #     print("0. 뒤로")
+    #     print()
 
-        start_input = input("시작 시간 > ").strip()
+    #     start_input = input("시작 시간 > ").strip()
 
-        if start_input == "0":
-            return
+    #     if start_input == "0":
+    #         return
 
-        end_input = input("종료 시간 > ").strip()
+    #     end_input = input("종료 시간 > ").strip()
 
-        if end_input == "0":
-            return
+    #     if end_input == "0":
+    #         return
 
-        try:
-            start_time = datetime.strptime(
-                start_input, "%Y-%m-%d %H:%M"
-            )
-            end_time = datetime.strptime(
-                end_input, "%Y-%m-%d %H:%M"
-            )
-        except ValueError:
-            print("시간 형식이 올바르지 않습니다.")
-            input("엔터를 누르면 돌아갑니다.")
-            return
+    #     try:
+    #         start_time = datetime.strptime(
+    #             start_input, "%Y-%m-%d %H:%M"
+    #         )
+    #         end_time = datetime.strptime(
+    #             end_input, "%Y-%m-%d %H:%M"
+    #         )
+    #     except ValueError:
+    #         print("시간 형식이 올바르지 않습니다.")
+    #         input("엔터를 누르면 돌아갑니다.")
+    #         return
 
-        if start_time > end_time:
-            print("시작 시간이 종료 시간보다 늦을 수 없습니다.")
-            input("엔터를 누르면 돌아갑니다.")
-            return
+    #     if start_time > end_time:
+    #         print("시작 시간이 종료 시간보다 늦을 수 없습니다.")
+    #         input("엔터를 누르면 돌아갑니다.")
+    #         return
 
-        result = []
+    #     result = []
 
-        for car in cars:
-            # 입차 시간 확인
-            if car.park_in:
-                park_in_time = datetime.strptime(
-                    car.park_in, "%Y-%m-%d %H:%M"
-                )
+    #     for car in cars:
+    #         # 입차 시간 확인
+    #         if car.park_in:
+    #             park_in_time = datetime.strptime(
+    #                 car.park_in, "%Y-%m-%d %H:%M"
+    #             )
 
-                if start_time <= park_in_time <= end_time:
-                    result.append((park_in_time, "입차", car))
+    #             if start_time <= park_in_time <= end_time:
+    #                 result.append((park_in_time, "입차", car))
 
-            # 출차 시간 확인
-            if car.park_out:
-                park_out_time = datetime.strptime(
-                    car.park_out, "%Y-%m-%d %H:%M"
-                )
+    #         # 출차 시간 확인
+    #         if car.park_out:
+    #             park_out_time = datetime.strptime(
+    #                 car.park_out, "%Y-%m-%d %H:%M"
+    #             )
 
-                if start_time <= park_out_time <= end_time:
-                    result.append((park_out_time, "출차", car))
+    #             if start_time <= park_out_time <= end_time:
+    #                 result.append((park_out_time, "출차", car))
 
-        # 발생 시간순 정렬
-        result.sort(key=lambda item: item[0])
+    #     # 발생 시간순 정렬
+    #     result.sort(key=lambda item: item[0])
 
-        print()
-        print("차량 관리 시스템 - (입차/출차 시간별 조회)")
-        print(f"조회 기간: {start_input} ~ {end_input}")
-        print(f"총 {len(result)}건 조회")
-        print()
+    #     print()
+    #     print("차량 관리 시스템 - (입차/출차 시간별 조회)")
+    #     print(f"조회 기간: {start_input} ~ {end_input}")
+    #     print(f"총 {len(result)}건 조회")
+    #     print()
 
-        if len(result) == 0:
-            print("해당 시간대의 입차/출차 기록이 없습니다.")
-        else:
-            for event_time, event_type, car in result:
-                print(
-                    f"[{event_type}] "
-                    f"{event_time.strftime('%Y-%m-%d %H:%M')} "
-                    f"| {car.number} "
-                    f"| {car.name} "
-                    f"| {car.model}"
-                )
+    #     if len(result) == 0:
+    #         print("해당 시간대의 입차/출차 기록이 없습니다.")
+    #     else:
+    #         for event_time, event_type, car in result:
+    #             print(
+    #                 f"[{event_type}] "
+    #                 f"{event_time.strftime('%Y-%m-%d %H:%M')} "
+    #                 f"| {car.number} "
+    #                 f"| {car.name} "
+    #                 f"| {car.model}"
+    #             )
 
-        print()
-        input("엔터를 누르면 조회 메뉴로 돌아갑니다.")
+    #     print()
+    #     input("엔터를 누르면 조회 메뉴로 돌아갑니다.")
 
 
 console = Console()
