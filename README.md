@@ -12,7 +12,6 @@ Apartment resident vehicle management system based on Python.
 ### Environment Setup
 - Terminal
 ```
-cd "PATH_TO_REPO\"
 python -m venv .venv
 .venv\Scripts\activate
 ```
