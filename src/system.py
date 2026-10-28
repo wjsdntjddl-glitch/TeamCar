@@ -72,7 +72,7 @@ class System:
                 self.seq_view_detail()
             case 3:  # 차량 제조회사 기준 조회
                 console.clear()
-                self.seq_view_by_model()
+                self.seq_view_by_brand()
             case 4:  # 차주 이름으로 차량 조회
                 console.clear()
                 self.seq_view_by_name()
@@ -85,8 +85,8 @@ class System:
         console.show_view_detail()
         self.seq_view()
 
-    def seq_view_by_model(self):  # 차량 제조회사 기준 조회
-        console.show_view_by_model()
+    def seq_view_by_brand(self):  # 차량 제조회사 기준 조회
+        console.show_view_by_brand()
         self.seq_view()
 
     def seq_view_by_name(self):  # 차주 이름으로 차량 조회
