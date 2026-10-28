@@ -18,7 +18,7 @@ class Console:
         self.widths = [wcswidth(header) for header in headers]
 
         for car in car_manager.data:
-            values = [car.number, car.name, self.format_phone(car.phone), car.model, car.color]
+            values = [car.number, car.name, self.format_phone(car.phone), car.brand, car.color]
 
             for i, value in enumerate(values):
                 self.widths[i] = max(self.widths[i], wcswidth(str(value)))
@@ -92,7 +92,7 @@ class Console:
             page_cars = car_manager.data[start:end]
 
             for car in page_cars:
-                values = [car.number, car.name, self.format_phone(car.phone), car.model, car.color]
+                values = [car.number, car.name, self.format_phone(car.phone), car.brand, car.color]
 
                 self.print_row(values)
 
@@ -148,7 +148,7 @@ class Console:
                 print(f"차량 번호 : {car.number}")
                 print(f"이름      : {car.name}")
                 print(f"연락처    : {self.format_phone(car.phone)}")
-                print(f"차종      : {car.model}")
+                print(f"차종      : {car.brand}")
                 print(f"색상      : {car.color}")
                 print()
                 return
@@ -156,23 +156,23 @@ class Console:
         print()
         print("해당 차량 번호를 찾을 수 없습니다.")
 
-    def show_view_by_model(self):  # 차량 제조회사 기준 조회 화면
+    def show_view_by_brand(self):  # 차량 제조회사 기준 조회 화면
         print()
         print("차량 관리 시스템 - (차량 제조회사 기준 조회)")
         print("도움말: 조회할 차량 제조회사를 입력하세요.")
         print("0. 뒤로")
         print()
 
-        model = input("> ").strip()
+        brand = input("> ").strip()
         console.clear()
 
-        if model == "0":
+        if brand == "0":
             return
 
         result = []
 
         for car in car_manager.data:
-            if car.model == model:
+            if car.brand == brand:
                 result.append(car)
 
         print()
@@ -188,7 +188,7 @@ class Console:
         self.print_row(headers)
 
         for car in result:
-            values = [car.number, car.name, self.format_phone(car.phone), car.model, car.color]
+            values = [car.number, car.name, self.format_phone(car.phone), car.brand, car.color]
 
             self.print_row(values)
 
@@ -224,7 +224,7 @@ class Console:
         self.print_row(headers)
 
         for car in result:
-            values = [car.number, car.name, self.format_phone(car.phone), car.model, car.color]
+            values = [car.number, car.name, self.format_phone(car.phone), car.brand, car.color]
 
             self.print_row(values)
 

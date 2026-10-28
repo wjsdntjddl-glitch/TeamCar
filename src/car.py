@@ -7,13 +7,13 @@ class Car:
         number: str | None = None,
         name: str | None = None,
         phone: str | None = None,
-        model: str | None = None,
+        brand: str | None = None,
         color: str | None = None,
     ) -> None:
         self.__number = number
         self.__name = name
         self.__phone = phone
-        self.__model = model
+        self.__brand = brand
         self.__color = color
 
     @property
@@ -50,12 +50,12 @@ class Car:
         self.__phone = value
 
     @property
-    def model(self) -> str | None:
-        return self.__model if self.__model is not None else None
+    def brand(self) -> str | None:
+        return self.__brand if self.__brand is not None else None
 
-    @model.setter
-    def model(self, value: str) -> None:
-        self.__model = value
+    @brand.setter
+    def brand(self, value: str) -> None:
+        self.__brand = value
 
     @property
     def color(self) -> str | None:
@@ -74,7 +74,7 @@ class Car:
             number=from_dict["number"],
             name=from_dict["name"],
             phone=from_dict["phone"],
-            model=from_dict["model"],
+            brand=from_dict["brand"],
             color=from_dict["color"],
         )
 
@@ -87,7 +87,7 @@ class Car:
             from_obj.__number is None
             or from_obj.__name is None
             or from_obj.__phone is None
-            or from_obj.__model is None
+            or from_obj.__brand is None
             or from_obj.__color is None
         ):
             raise TypeError("Car 객체의 데이터 멤버에 None이 포함되어 있습니다.")
@@ -96,6 +96,6 @@ class Car:
             "number": from_obj.__number,
             "name": from_obj.__name,
             "phone": from_obj.__phone,
-            "model": from_obj.__model,
+            "brand": from_obj.__brand,
             "color": from_obj.__color,
         }

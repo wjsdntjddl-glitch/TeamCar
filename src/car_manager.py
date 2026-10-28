@@ -35,7 +35,7 @@ class CarManager:
                     number=data["number"],
                     name=data["name"],
                     phone=data["phone"],
-                    model=data["model"],
+                    brand=data["brand"],
                     color=data["color"],
                 )
                 self.data.append(car)
