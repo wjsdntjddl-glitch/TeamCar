@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 from car import Car
+from utils.logger import logger
 
 data_path = Path("out") / "data.json"
 
@@ -25,8 +26,9 @@ class CarManager:
 
     def load(self) -> None:
         if not data_path.exists():
+            logger.warn("JSON 파일을 경로 탐색 실패 / 경로: " + str(data_path.absolute()))
             print("경고! JSON 파일이 없습니다.")
-            print(f"> {data_path}")
+            print(f"> {data_path.absolute()}")
             return
 
         with data_path.open("r", encoding="utf-8") as file:
@@ -40,5 +42,13 @@ class CarManager:
                     color=data["color"],
                 )
                 self.data.append(car)
+
+    def is_duplicated(self, number: str) -> bool:
+        """동일한 차량 번호 중복 검사"""
+        for car in self.data:
+            if car.number == number:
+                return True
+
+        return False
 
 car_manager = CarManager()
