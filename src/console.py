@@ -2,6 +2,7 @@ import subprocess
 
 from wcwidth import wcswidth
 
+from car import Car
 from car_manager import car_manager
 
 
@@ -34,9 +35,6 @@ class Console:
             result += " " + self.align_text(values[i], self.widths[i]) + " |"
 
         print(result)
-
-    def clear(self) -> None:
-        subprocess.run("cls", shell=True, check=False)
 
     def show_start_menu(self) -> None:
         """시작 화면"""

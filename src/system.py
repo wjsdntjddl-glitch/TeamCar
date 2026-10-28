@@ -91,18 +91,6 @@ class System:
         console.show_view_by_name()
         self.seq_view()
 
-
-            int_input = int(user_input)
-            if int_input < start or int_input > end:
-                raise (ValueError)
-
-        except TypeError:
-            return -1
-        except ValueError:
-            return -1
-
-        return int_input
-
     def seq_manage(self):
         console.show_manage_menu()
         input = System.get_menu_input(0, 3)
