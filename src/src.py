@@ -3,7 +3,8 @@
 
 
 def main():
-    print("main()")
+    system.seq_load()
+    system.seq_start()
 
 
 if __name__ == "__main__":
