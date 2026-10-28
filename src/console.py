@@ -1,6 +1,8 @@
-from car_manager import car_manager
+import subprocess
 
 from wcwidth import wcswidth
+
+from car_manager import car_manager
 
 
 class Console:
@@ -33,7 +35,11 @@ class Console:
 
         print(result)
 
-    def show_start_menu(self):
+    def clear(self) -> None:
+        subprocess.run("cls", shell=True, check=False)
+
+    def show_start_menu(self) -> None:
+        """시작 화면"""
         print(" ")
         print("차량 관리 시스템")
         print("도움말: 숫자를 입력해 메뉴에 접근합니다. ex) 조회시 1 입력")
@@ -41,7 +47,7 @@ class Console:
         print("0. 프로그램 종료")
         print("1. 조회")
         print("2. 관리")
-        print("3. 계산")
+        print("\n> ", end="")
 
     def show_view_menu(self):  # 조회 메뉴 화면
         print(" ")
@@ -55,6 +61,7 @@ class Console:
         print(" ")
 
     def show_view_all(self):  # 전체 조회 화면
+        self.clear()
         self.update_widths()
         total = len(car_manager.data)
 
@@ -65,7 +72,6 @@ class Console:
         self.page = 1
 
         while True:
-            print("\n" * 2)
             print("차량 관리 시스템 - (차량 목록 조회)")
             print(f"총 {total}대 조회")
             print()
@@ -97,6 +103,7 @@ class Console:
             print()
 
             choice = input("선택: ")
+            self.clear()
 
             if choice == "0":
                 break
@@ -124,6 +131,7 @@ class Console:
         print()
 
         number = input("> ").strip()
+        console.clear()
 
         if number == "0":
             return
@@ -150,6 +158,7 @@ class Console:
         print()
 
         model = input("> ").strip()
+        console.clear()
 
         if model == "0":
             return
@@ -185,6 +194,7 @@ class Console:
         print()
 
         name = input("> ").strip()
+        console.clear()
 
         if name == "0":
             return
@@ -217,23 +227,5 @@ class Console:
             ]
 
             self.print_row(values)
-
-    def clear(self) -> None:
-        subprocess.run("cls", shell=True, check=False)
-
-    ############
-    # 시작 화면 #
-    ############
-    def show_start_menu(self) -> None:
-        """시작 화면"""
-        print(" ")
-        print("차량 관리 시스템")
-        print("도움말: 숫자를 입력해 메뉴에 접근합니다. ex) 조회시 1 입력")
-        print(" ")
-        print("0. 프로그램 종료")
-        print("1. 조회")
-        print("2. 관리")
-        print("\n> ", end="")
-
 
 console = Console()
