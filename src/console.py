@@ -224,6 +224,8 @@ class Console:
                 car.color,
             ]
 
+            self.print_row(values)
+
     def clear(self) -> None:
         """콘솔 화면 초기화"""
         subprocess.run("cls", shell=True, check=False)
