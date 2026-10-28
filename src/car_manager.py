@@ -5,68 +5,6 @@ from car import Car
 
 class CarManager:
     def __init__(self):
-        
-        # 현재 파일과 같은 폴더에 있는 car.json 경로 설정
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        json_path = os.path.join(base_dir, "car.json")
-
-        # JSON 파일의 차량 정보를 self.data에 저장
-        with open(json_path, "r", encoding="utf-8") as file:
-            self.data = json.load(file)
-
-    def save(self):
-        pass
-
-    def load(self):
-        # 불러올 파일에 담긴 내용 예시
-        file_string = """ 
-        {
-            "서울12가3456" : {
-                "name" : "이상무",
-                "phone" : "010-0000-0000",
-                "model": "현대",
-                "color": "하얀색",
-                "parking": true,
-                "type": "입주민 차량",
-                "park_in" : [
-                    {"time" : "2026-10-19 09:25:00", "reason": "세탁기 고장 AS 방문"},
-                    {"time" : "2026-10-19 15:00:00", "reason": "식기세척기 고장 AS 방문"}
-                ],
-                "park_out" : [
-                    "2026-10-19 11:35:00"
-                ]
-            }
-        }
-        """
-
-        # 불러와진 데이터 예시
-        number = "서울12가3456"
-        name = "이상무"
-        phone = "010-0000-0000"
-        model = "현대"
-        color = "하얀색"
-        parking = True
-        type = "입주민 차량"
-        park_in = [
-            {"time": "2026-10-19 09:25:00", "reason": "세탁기 고장 AS 방문"},
-            {"time": "2026-10-19 15:00:00", "reason": "식기세척기 고장 AS 방문"},
-        ]
-        park_out = ["2026-10-19 11:35:00"]
-        
-
-        # self.data 딕셔너리에 Car 클래스의 객체를
-        # 차량 번호를 key로 하여 추가
-        self.data[number] = Car(
-            number, name, phone, model, color, parking, type, park_in, park_out
-        )
-
+        self.data = []
 
 car_manager = CarManager()
-
-def main():
-    print(car_manager.__dict__)
-
-
-if __name__ == "__main__":
-    car_manager = CarManager()
-    main()
