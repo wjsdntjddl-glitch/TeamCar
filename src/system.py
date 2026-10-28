@@ -1,19 +1,31 @@
-from car_manager import car_manager
-from console import console
+from car_manager import CarManager
+from console import Console
+from car import Car
 
 
 class System:
     def __init__(self):
-        pass
+        self.car_manager = CarManager()
+        self.console = Console()
 
     def seq_load(self):
         # JSON 파일을 불러와 Python 데이터 형식으로 변환
-        car_manager.load()
+        self.console.cars = [
+            Car(
+                item["number"],
+                item["name"],
+                item["phone"],
+                item["model"],
+                item["color"],
+                None, None, None, None
+            )
+            for item in self.car_manager.data
+        ]
 
     def seq_start(self):
         # 콘솔 객체를 불러 시작 메뉴를 콘솔 화면에 출력
         # Figma - MiniProject - 화면설계서 - 시작 메뉴
-        console.show_start_menu()
+        self.console.show_start_menu()
 
         # 사용자 입력 받기
         # 단, 여기서 사용자 입력을 받을때 예외 처리 필요
@@ -34,7 +46,7 @@ class System:
 
 
     def seq_view(self): # 차량 조회 메뉴
-        console.show_view_menu()
+        self.console.show_view_menu()
         print("\n> ", end="")
         user_input = int(input())
 
@@ -53,19 +65,19 @@ class System:
             #     self.seq_view_entered_between()
 
     def seq_view_all(self):  # 차량 목록 조회
-        console.show_view_all()
+        self.console.show_view_all()
         return self.seq_view()
 
     def seq_view_detail(self):  # 차량 상세 조회
-        console.show_view_detail()
+        self.console.show_view_detail()
         return self.seq_view()
 
     def seq_view_by_model(self):  # 차량 제조회사 기준 조회
-        console.show_view_by_model()
+        self.console.show_view_by_model()
         return self.seq_view()
 
     def seq_view_by_name(self):  # 차주 이름으로 차량 조회
-        console.show_view_by_name()
+        self.console.show_view_by_name()
         return self.seq_view()
 
     # def seq_view_entered_between(self):  # 입차 차량 조회
@@ -76,7 +88,7 @@ class System:
         pass
 
     def seq_manage(self):  # 차량 관리
-        console.show_manage_menu()
+        self.console.show_manage_menu()
         print("\n> ", end="")
         user_input = int(input())
 
@@ -91,15 +103,15 @@ class System:
                 self.seq_manage_remove()
 
     def seq_manage_register(self):  # 차량 정보 등록
-        console.show_manage_register()     
+        self.console.show_manage_register()     
         return system.seq_start()
 
     def seq_manage_modify(self):  # 차량 정보 수정
-        console.show_manage_modify()
+        self.console.show_manage_modify()
         return system.seq_start()
 
     def seq_manage_remove(self):  # 차량 정보 삭제
-        console.show_manage_remove()
+        self.console.show_manage_remove()
         return system.seq_start()
 
     def seq_calc(self):

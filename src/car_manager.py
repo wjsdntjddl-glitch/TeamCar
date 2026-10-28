@@ -1,9 +1,18 @@
+import json
+import os
 from car import Car
 
 
 class CarManager:
     def __init__(self):
-        self.data = {}
+        
+        # 현재 파일과 같은 폴더에 있는 car.json 경로 설정
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        json_path = os.path.join(base_dir, "car.json")
+
+        # JSON 파일의 차량 정보를 self.data에 저장
+        with open(json_path, "r", encoding="utf-8") as file:
+            self.data = json.load(file)
 
     def save(self):
         pass
@@ -59,4 +68,5 @@ def main():
 
 
 if __name__ == "__main__":
+    car_manager = CarManager()
     main()

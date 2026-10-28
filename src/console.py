@@ -1,44 +1,41 @@
-import json
-import os
-from car import Car
+
 from wcwidth import wcswidth
-
-# car.json 파일 경로
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-JSON_PATH = os.path.join(BASE_DIR, "car.json")
-
-# JSON 파일 읽기
-with open(JSON_PATH, "r", encoding="utf-8") as file:
-    data = json.load(file)
-
-# JSON 데이터를 Car 객체로 변환
-cars = []
-
-for item in data:
-    car = Car(
-        item["number"],
-        item["name"],
-        item["phone"],
-        item["model"],
-        item["color"],
-        None,
-        None,
-        None,
-        None
-    )
-    cars.append(car)
 
 class Console:
     def __init__(self):
+
+        # JSON 데이터를 Car 객체로 변환
+        self.cars = []
+
         self.page = 1  # 현재 페이지
         self.page_size = 3  # 한 페이지에 출력할 차량 수
-        self.widths = [14, 10, 17, 20, 8]
+        self.widths = [4, 4, 6, 4, 4]
+    def update_widths(self):
+        headers = ["번호", "이름", "연락처", "차종", "색상"]
+
+        self.widths = [wcswidth(header) for header in headers]
+
+        for car in self.cars:
+            values = [
+                car.number,
+                car.name,
+                car.phone,
+                car.model,
+                car.color
+            ]
+
+            for i, value in enumerate(values):
+                self.widths[i] = max(
+                    self.widths[i],
+                    wcswidth(str(value))
+                )
 
     def align_text(self, text, width):
         text = str(text)
         return text + " " * max(0, width - wcswidth(text))
 
     def print_row(self, values):
+        self.update_widths()
         result = "|"
 
         for i in range(len(values)):
@@ -71,7 +68,8 @@ class Console:
         print(" ")
 
     def show_view_all(self): # 전체 조회 화면
-        total = len(cars)
+        self.update_widths()
+        total = len(self.cars)
 
         total_pages = max(
             1, (total + self.page_size - 1) // self.page_size
@@ -97,7 +95,7 @@ class Console:
             start = (self.page - 1) * self.page_size
             end = start + self.page_size
 
-            page_cars = cars[start:end]
+            page_cars = self.cars[start:end]
 
             for car in page_cars:
                 values = [
@@ -157,7 +155,7 @@ class Console:
         if number == "0":
             return
 
-        for car in cars:
+        for car in self.cars:
             if car.number == number:
                 print()
                 print(f"차량 번호 : {car.number}")
@@ -190,7 +188,7 @@ class Console:
 
         result = []
 
-        for car in cars:
+        for car in self.cars:
             if car.model == model:
                 result.append(car)
 
@@ -236,7 +234,7 @@ class Console:
 
         result = []
 
-        for car in cars:
+        for car in self.cars:
             if car.name == name:
                 result.append(car)
 
@@ -352,6 +350,3 @@ class Console:
 
     #     print()
     #     input("엔터를 누르면 조회 메뉴로 돌아갑니다.")
-
-
-console = Console()
