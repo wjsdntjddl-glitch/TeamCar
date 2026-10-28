@@ -46,7 +46,7 @@ class System:
                 self.seq_view()
             case 2:
                 console.clear()
-                # self.seq_manage()
+                self.seq_manage()
 
     def seq_end(self):
         """프로그램 종료"""
