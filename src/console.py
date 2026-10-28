@@ -8,9 +8,9 @@ class Console:
     def clear(self) -> None:
         subprocess.run("cls", shell=True, check=False)
 
-############
-# 시작 화면 #
-############
+    ############
+    # 시작 화면 #
+    ############
     def show_start_menu(self) -> None:
         """시작 화면"""
         print(" ")
@@ -20,9 +20,7 @@ class Console:
         print("0. 프로그램 종료")
         print("1. 조회")
         print("2. 관리")
-        print("3. 계산")
         print("\n> ", end="")
 
+
 console = Console()
-
-
