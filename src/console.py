@@ -17,10 +17,18 @@ class Console:
         self.widths = [wcswidth(header) for header in headers]
 
         for car in car_manager.data:
-            values = [car.number, car.name, car.phone, car.model, car.color]
+            values = [car.number, car.name, self.format_phone(car.phone), car.model, car.color]
 
             for i, value in enumerate(values):
                 self.widths[i] = max(self.widths[i], wcswidth(str(value)))
+
+    def format_phone(self,phone):
+        phone = str(phone).replace('-','')
+
+        if len(phone) == 11 and phone.isdigit():
+            return f'{phone[:3]}-{phone[3:7]}-{phone[7:]}'
+
+        return phone
 
     def align_text(self, text, width):
         text = str(text)
@@ -86,7 +94,7 @@ class Console:
             page_cars = car_manager.data[start:end]
 
             for car in page_cars:
-                values = [car.number, car.name, car.phone, car.model, car.color]
+                values = [car.number, car.name, self.format_phone(car.phone), car.model, car.color]
 
                 self.print_row(values)
 
@@ -141,7 +149,7 @@ class Console:
                 print()
                 print(f"차량 번호 : {car.number}")
                 print(f"이름      : {car.name}")
-                print(f"연락처    : {car.phone}")
+                print(f"연락처    : {self.format_phone(car.phone)}")
                 print(f"차종      : {car.model}")
                 print(f"색상      : {car.color}")
                 print()
@@ -182,7 +190,7 @@ class Console:
         self.print_row(headers)
 
         for car in result:
-            values = [car.number, car.name, car.phone, car.model, car.color]
+            values = [car.number, car.name, self.format_phone(car.phone), car.model, car.color]
 
             self.print_row(values)
 
@@ -218,13 +226,7 @@ class Console:
         self.print_row(headers)
 
         for car in result:
-            values = [
-                car.number,
-                car.name,
-                car.phone,
-                car.model,
-                car.color,
-            ]
+            values = [car.number, car.name, self.format_phone(car.phone), car.model, car.color]
 
             self.print_row(values)
 
