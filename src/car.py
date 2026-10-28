@@ -4,7 +4,7 @@ from datetime import datetime
  
 class Car:
  
-    TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+    # TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
  
     def __init__(
         self,
@@ -65,8 +65,9 @@ class Car:
     @name.setter
     def name(self, value: str) -> None:
         if not isinstance(value, str) or not value.strip():
-            raise ValueError("이름은 한글, 영문, 숫자 2~20자로 입력해주십시오.")
+            raise ValueError("이름은 한글 또는 영문으로 입력해주십시오.")
         self.__name = value
+
  
     @phone.setter
     def phone(self, value: str) -> None:
@@ -122,10 +123,12 @@ class Car:
         """차량 회사 검증: 1~30자"""
         return isinstance(model, str) and 1 <= len(model) <= 30
  
-    @staticmethod
-    def validate_color(color) -> bool: # len()
-        """색상 검증: 한글/영문 1~10자"""
-        return isinstance(color, str) and re.fullmatch(r"[가-힣A-Za-z]{1,10}", color) is not None
+    # @staticmethod
+    # def validate_color(color) -> bool: # len()
+    #     """색상 검증: 한글/영문 1~10자"""
+    #     return (isinstance(color, str) 
+    #     and 1<= len(color) <= 10)
+    #     and re.fullmatch(r"[가-힣A-Za-z]}", color) is not None
  
  
     ##################
