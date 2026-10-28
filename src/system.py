@@ -1,10 +1,11 @@
 from car import Car
 from car_manager import car_manager
 from console import console
+from utils.logger import logger
 
 
 class System:
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
     @classmethod
@@ -50,6 +51,7 @@ class System:
 
     def seq_end(self):
         """프로그램 종료"""
+        logger.log("프로그램 종료")
         console.clear()
         print("프로그램을 종료합니다.")
 
