@@ -1,4 +1,4 @@
-from system import system
+from system import System
 
 
 def test_answer():

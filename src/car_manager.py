@@ -40,5 +40,4 @@ class CarManager:
                 )
                 self.data.append(car)
 
-
 car_manager = CarManager()

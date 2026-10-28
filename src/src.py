@@ -1,7 +1,7 @@
-# from system import system
-# from utils.logger import logger
+from system import system
 
 
+# 프로그램 시작
 def main():
     system.seq_load()
     system.seq_start()

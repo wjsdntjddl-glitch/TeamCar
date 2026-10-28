@@ -1,4 +1,4 @@
-from console import console
+from console import Console
 
 
 def test_answer():
