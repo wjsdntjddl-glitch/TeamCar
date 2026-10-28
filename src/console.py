@@ -1,32 +1,10 @@
-import json
 import os
-from car import Car
+
 from wcwidth import wcswidth
 
-# car.json 파일 경로
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-JSON_PATH = os.path.join(BASE_DIR, "car.json")
+from car import Car
+from car_manager import car_manager
 
-# JSON 파일 읽기
-with open(JSON_PATH, "r", encoding="utf-8") as file:
-    data = json.load(file)
-
-# JSON 데이터를 Car 객체로 변환
-cars = []
-
-for item in data:
-    car = Car(
-        item["number"],
-        item["name"],
-        item["phone"],
-        item["model"],
-        item["color"],
-        None,
-        None,
-        None,
-        None
-    )
-    cars.append(car)
 
 class Console:
     def __init__(self):
@@ -42,12 +20,10 @@ class Console:
         result = "|"
 
         for i in range(len(values)):
-            result += " " + self.align_text(
-                values[i], self.widths[i]
-            ) + " |"
+            result += " " + self.align_text(values[i], self.widths[i]) + " |"
 
         print(result)
-    
+
     def show_start_menu(self):
         print(" ")
         print("차량 관리 시스템")
@@ -58,7 +34,7 @@ class Console:
         print("2. 관리")
         print("3. 계산")
 
-    def show_view_menu(self): # 조회 메뉴 화면
+    def show_view_menu(self):  # 조회 메뉴 화면
         print(" ")
         print("차량 관리 시스템")
         print("도움말: 숫자를 입력해 메뉴에 접근합니다. ex) 조회시 1 입력")
@@ -67,15 +43,12 @@ class Console:
         print("2. 차량 상세 조회")
         print("3. 차량 제조회사 기준 조회")
         print("4. 차주 이름으로 차량 조회")
-        # print("5. 입차 차량 조회 (시간별)")
         print(" ")
 
-    def show_view_all(self): # 전체 조회 화면
-        total = len(cars)
+    def show_view_all(self):  # 전체 조회 화면
+        total = len(car_manager.data)
 
-        total_pages = max(
-            1, (total + self.page_size - 1) // self.page_size
-        )
+        total_pages = max(1, (total + self.page_size - 1) // self.page_size)
 
         table_width = sum(self.widths) + 3 * len(self.widths) + 1
 
@@ -88,8 +61,11 @@ class Console:
             print()
 
             headers = [
-                "번호", "이름", "연락처", "차종",
-                "색상" #, "상태", "외부 차량"
+                "번호",
+                "이름",
+                "연락처",
+                "차종",
+                "색상",  # , "상태", "외부 차량"
             ]
 
             self.print_row(headers)
@@ -97,7 +73,7 @@ class Console:
             start = (self.page - 1) * self.page_size
             end = start + self.page_size
 
-            page_cars = cars[start:end]
+            page_cars = car_manager.data[start:end]
 
             for car in page_cars:
                 values = [
@@ -144,8 +120,7 @@ class Console:
             else:
                 print("잘못된 입력입니다.")
 
-
-    def show_view_detail(self): # 상세 조회 화면
+    def show_view_detail(self):  # 상세 조회 화면
         print()
         print("차량 관리 시스템 - (차량 상세 조회)")
         print("도움말: 차량 번호를 입력하세요.")
@@ -157,7 +132,7 @@ class Console:
         if number == "0":
             return
 
-        for car in cars:
+        for car in car_manager.data:
             if car.number == number:
                 print()
                 print(f"차량 번호 : {car.number}")
@@ -176,7 +151,7 @@ class Console:
         print()
         print("해당 차량 번호를 찾을 수 없습니다.")
 
-    def show_view_by_model(self): # 차량 제조회사 기준 조회 화면
+    def show_view_by_model(self):  # 차량 제조회사 기준 조회 화면
         print()
         print("차량 관리 시스템 - (차량 제조회사 기준 조회)")
         print("도움말: 조회할 차량 제조회사를 입력하세요.")
@@ -190,7 +165,7 @@ class Console:
 
         result = []
 
-        for car in cars:
+        for car in car_manager.data:
             if car.model == model:
                 result.append(car)
 
@@ -203,8 +178,11 @@ class Console:
             return
 
         headers = [
-            "번호", "이름", "연락처", "차종",
-            "색상" #, "상태", "외부 차량"
+            "번호",
+            "이름",
+            "연락처",
+            "차종",
+            "색상",  # , "상태", "외부 차량"
         ]
 
         self.print_row(headers)
@@ -216,13 +194,11 @@ class Console:
                 car.phone,
                 car.model,
                 car.color,
-                # "입차" if car.parking else "출차",
-                # "N" if car.type == "입주민" else "Y"
             ]
 
             self.print_row(values)
 
-    def show_view_by_name(self): # 차주 이름으로 차량 조회 화면
+    def show_view_by_name(self):  # 차주 이름으로 차량 조회 화면
         print()
         print("차량 관리 시스템 - (차주 이름으로 차량 조회)")
         print("도움말: 조회할 차주 이름을 입력하세요.")
@@ -236,7 +212,7 @@ class Console:
 
         result = []
 
-        for car in cars:
+        for car in car_manager.data:
             if car.name == name:
                 result.append(car)
 
@@ -249,8 +225,11 @@ class Console:
             return
 
         headers = [
-            "번호", "이름", "연락처", "차종",
-            "색상" #, "상태", "외부 차량"
+            "번호",
+            "이름",
+            "연락처",
+            "차종",
+            "색상",
         ]
 
         self.print_row(headers)
@@ -262,96 +241,9 @@ class Console:
                 car.phone,
                 car.model,
                 car.color,
-                # "입차" if car.parking else "출차",
-                # "N" if car.type == "입주민" else "Y"
             ]
 
             self.print_row(values)
-
-
-    
-    
-    # def show_view_entered_between(self): # 입차 차량 조회 화면
-    #     from datetime import datetime
-
-    #     print()
-    #     print("차량 관리 시스템 - (입차/출차 시간별 조회)")
-    #     print("도움말: 조회할 시작 시간과 종료 시간을 입력하세요.")
-    #     print("입력 형식: YYYY-MM-DD HH:MM")
-    #     print("0. 뒤로")
-    #     print()
-
-    #     start_input = input("시작 시간 > ").strip()
-
-    #     if start_input == "0":
-    #         return
-
-    #     end_input = input("종료 시간 > ").strip()
-
-    #     if end_input == "0":
-    #         return
-
-    #     try:
-    #         start_time = datetime.strptime(
-    #             start_input, "%Y-%m-%d %H:%M"
-    #         )
-    #         end_time = datetime.strptime(
-    #             end_input, "%Y-%m-%d %H:%M"
-    #         )
-    #     except ValueError:
-    #         print("시간 형식이 올바르지 않습니다.")
-    #         input("엔터를 누르면 돌아갑니다.")
-    #         return
-
-    #     if start_time > end_time:
-    #         print("시작 시간이 종료 시간보다 늦을 수 없습니다.")
-    #         input("엔터를 누르면 돌아갑니다.")
-    #         return
-
-    #     result = []
-
-    #     for car in cars:
-    #         # 입차 시간 확인
-    #         if car.park_in:
-    #             park_in_time = datetime.strptime(
-    #                 car.park_in, "%Y-%m-%d %H:%M"
-    #             )
-
-    #             if start_time <= park_in_time <= end_time:
-    #                 result.append((park_in_time, "입차", car))
-
-    #         # 출차 시간 확인
-    #         if car.park_out:
-    #             park_out_time = datetime.strptime(
-    #                 car.park_out, "%Y-%m-%d %H:%M"
-    #             )
-
-    #             if start_time <= park_out_time <= end_time:
-    #                 result.append((park_out_time, "출차", car))
-
-    #     # 발생 시간순 정렬
-    #     result.sort(key=lambda item: item[0])
-
-    #     print()
-    #     print("차량 관리 시스템 - (입차/출차 시간별 조회)")
-    #     print(f"조회 기간: {start_input} ~ {end_input}")
-    #     print(f"총 {len(result)}건 조회")
-    #     print()
-
-    #     if len(result) == 0:
-    #         print("해당 시간대의 입차/출차 기록이 없습니다.")
-    #     else:
-    #         for event_time, event_type, car in result:
-    #             print(
-    #                 f"[{event_type}] "
-    #                 f"{event_time.strftime('%Y-%m-%d %H:%M')} "
-    #                 f"| {car.number} "
-    #                 f"| {car.name} "
-    #                 f"| {car.model}"
-    #             )
-
-    #     print()
-    #     input("엔터를 누르면 조회 메뉴로 돌아갑니다.")
 
 
 console = Console()
