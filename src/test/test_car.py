@@ -1,4 +1,4 @@
-import car
+from car import Car
 
 
 def test_answer():

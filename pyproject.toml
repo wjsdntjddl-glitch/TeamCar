@@ -9,5 +9,6 @@ description = "Apartment resident vehicle management system based on Python."
 readme = "README.md"
 requires-python = ">=3.12.0"
 dependencies = [
+    "wcwidth>=0.9.4",
     "pytest>=9.1.1"
 ]
