@@ -1,6 +1,4 @@
-import json
-import os
-
+from car import Car
 from car_manager import car_manager
 from console import console
 
@@ -8,125 +6,167 @@ from console import console
 class System:
     def __init__(self):
         pass
-        
 
-    def seq_load(self):
-        
-        car_manager.load()
+    @classmethod
+    def get_menu_input(cls, start: int, end: int) -> int:
+        """사용자 입력을 받아 정수로 변환하여 반환"""
+        user_input = input()
+        try:
+            if not user_input.isnumeric():
+                raise (TypeError)
 
-    def seq_start(self):
-        # 콘솔 객체를 불러 시작 메뉴를 콘솔 화면에 출력
-        # Figma - MiniProject - 화면설계서 - 시작 메뉴
-        console.show_start_menu()
+            int_input = int(user_input)
+            if int_input < start or int_input > end:
+                raise (ValueError)
 
-        # 사용자 입력 받기
-        # 단, 여기서 사용자 입력을 받을때 예외 처리 필요
-        # 0~3 사이 정수만 입력받아야 하며 그외 모든
-        # 값들은 예외
-        print("\n> ", end="")
-        user_input = int(input())
+        except TypeError:
+            return -1
+        except ValueError:
+            return -1
 
-        match user_input:
-            case 0:  # 프로그램 종료
-                return
-            case 1:  # 조회 메뉴
-                self.seq_view()
-            case 2:  # 관리 메뉴
-                self.seq_manage()
-            case 3:  # 주차 요금 계산
-                self.seq_calc()
+        return int_input
 
-    def seq_view(self):
-        pass
-
-    def seq_manage(self):  # 차량 관리
+    def seq_manage(self):
         console.show_manage_menu()
-        choice = input("\n> ", end="")
-            
-        if choice == '1':
-            self.show_manage_register()
-        elif choice == '2':
-            self.show_manage_modify()
-        elif choice == '3':
-            self.show_manage_remove()
-        elif choice == '0':
-            self.seq_start()
-        else:
-            print("올바른 번호를 입력해 주세요.")
+        input = System.get_menu_input(0, 3)
 
+        match input:
+            case -1:
+                console.clear()
+                print("[Error] 다시 입력하십시오.")
+                self.seq_manage()
+            case 0:
+                console.clear()
+                self.seq_start()
+            case 1:
+                console.clear()
+                self.seq_manage_register()
+            case 2:
+                console.clear()
+                self.seq_manage_modifiy()
+            case 3:
+                console.clear()
+                self.seq_manage_remove()
 
-    def seq_manage_register(self):  # 차량 정보 등록
-        console.show_manage_register_1()
-        car_number = input("\n> ", end="")
+    def seq_manage_register(self) -> None:
+        screen = 1
+        car = Car()
 
-        if not isinstance(car_number,str) or car_number.strip():
-            return print("")
+        while True:
+            if screen == 1:
+                console.show_manage_register(1)
+                try:
+                    car.number = input()
+                    screen = 2
+                except ValueError as e:
+                    console.clear()
+                    print(e)
 
-        console.show_manage_register_2()
-        console.show_manage_register_3()
-        console.show_manage_register_4()
-        console.show_manage_register_5()
-        console.show_manage_register_6()
+            elif screen == 2:
+                console.show_manage_register(2)
+                try:
+                    car.name = input()
+                    screen = 3
+                except ValueError as e:
+                    screen = 2
+                    console.clear()
+                    print(e)
 
-        return car_manager.save()
+            elif screen == 3:
+                console.show_manage_register(3)
+                try:
+                    car.phone = input()
+                    screen = 4
+                except ValueError as e:
+                    screen = 3
+                    console.clear()
+                    print(e)
 
-    def seq_manage_modify(self):  # 차량 정보 수정
-        console.show_manage_modify_1()
-        number1 = input("\n> ", end="")
+            elif screen == 4:
+                console.show_manage_register(4)
+                try:
+                    car.model = input()
+                    screen = 5
+                except ValueError as e:
+                    screen = 4
+                    console.clear()
+                    print(e)
 
-        for car in car_manager.data:
-            if car.number == number1:
-                console.show_manage_modify_2(car)
+            elif screen == 5:
+                console.show_manage_register(5)
+                try:
+                    car.color = input()
+                except ValueError as e:
+                    screen = 5
+                    console.clear()
+                    print(e)
 
-                number2 = input("\n> ", end="")
-                match number2:
-                    case 0:  # 뒤로
-                        return self.seq_manage()
-                    case 1:  # 번호
-                        # TODO
-                        console.show_manage_modify_2_1()
-                        try:
-                            car.number = input("\n> ", end="")
-                            print("번호 수정이 완료되었습니다.")
-                        except ValueError as e:
-                            print(e)
+                break
 
-                    case 2:  # 이름
-                        self.seq_manage_modify()
-                    case 3:  # 연락처
-                        self.seq_manage_remove()
-                    case 4:  # 차종
-                        self.seq_manage_remove()
-                    case 5:  # 색상
-                        self.seq_manage_remove()
+        car_manager.data.append(car)
+        car_manager.save()
+        console.clear()
+        print("등록이 완료됐습니다.")
+        self.seq_manage()
 
-
-
-
-    def seq_manage_remove(self):  # 차량 정보 삭제
-        console.show_manage_remove_1()
+    def seq_manage_modifiy(self) -> None:
+        console.show_manage_modifiy(1)
         number = input()
-        if number.strip() is not None:
-            print("공백을 입력하셨습니다. 다시 입력하세요.")
+        car = None
+        for item in car_manager.data:
+            if number == item.number:
+                car = item
+                break
+
+        if car is None:
+            console.clear()
+            print("[Error] 입력한 번호와 일치하는 차량이 없습니다.")
+            self.seq_manage()
+            return
+
+        console.clear()
+        console.show_manage_modifiy(2, car)
+        user_input = input()
+        
+        print("\n수정사항을 입력하세요.\n\n> ", end="")
+        while True:
+            try:
+                match user_input:
+                    case "1":
+                        car.number = input()
+                    case "2":
+                        car.name = input()
+                    case "3":
+                        car.phone = input()
+                    case "4":
+                        car.model = input()
+                    case "5":
+                        car.color = input()
+
+                break
+            except ValueError as e:
+                print(e)
+
+        car_manager.save()
+        console.clear()
+        print("수정이 완료됐습니다.")
+        self.seq_manage()
+
+    def seq_manage_remove(self):
+        console.show_manage_remove()
+        number = input()
 
         for car in car_manager.data:
             if car.number == number:
                 car_manager.data.remove(car)
-                print(f"[{car}] 등록 정보를 삭제 했습니다.")
-
                 car_manager.save()
+                print(f"[{number}] 차량 등록 정보를 삭제 했습니다.")
+                return
 
+
+        console.clear()
         print("차량 정보를 찾지 못했습니다.")
 
-    def seq_calc(self):
-        pass
-
+        self.seq_manage()
 
 system = System()
-
-def main():
-    pass
-
-
-if __name__ == "__main__":
-    main()
