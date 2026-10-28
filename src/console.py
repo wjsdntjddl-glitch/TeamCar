@@ -9,7 +9,7 @@ from car_manager import car_manager
 class Console:
     def __init__(self):
         self.page = 1  # 현재 페이지
-        self.page_size = 3  # 한 페이지에 출력할 차량 수
+        self.page_size = 10  # 한 페이지에 출력할 차량 수
         self.widths = [4, 4, 6, 4, 4]
 
     def update_widths(self):

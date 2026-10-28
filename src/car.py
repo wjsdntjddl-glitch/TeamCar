@@ -23,7 +23,7 @@ class Car:
     @number.setter
     def number(self, value: str) -> None:
         number = value.replace(" ", "")
-        pattern = r"[가-힣]{2}\d{2}\d?[가-힣]\d{4}$"
+        pattern = r"\d{2}\d?[가-힣]\d{4}$"
         if re.fullmatch(pattern, number) is None:
             raise ValueError("[Error] 차량 번호를 정확히 입력하십시오.")
 
