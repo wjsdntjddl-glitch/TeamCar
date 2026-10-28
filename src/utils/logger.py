@@ -1,4 +1,6 @@
 import configparser
+import inspect
+import os
 from datetime import datetime
 from enum import IntEnum
 from pathlib import Path
@@ -64,7 +66,6 @@ Log_Level=2
 
         # 로그 파일 오픈후 로그 작성
         with Logger._log_path.open(permission, encoding="utf-8") as file:
-            time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             match level:
                 case Logger.Level.DEBUG:
                     level_str = "Debug"
@@ -75,7 +76,19 @@ Log_Level=2
                 case Logger.Level.ERROR:
                     level_str = "Error"
 
-            result = f"[{level_str}] [{time}] {description}\n"
+            time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            frame = inspect.currentframe()
+            filename = "UNK"
+            line = "UNK"
+            if frame is not None:
+                caller = frame.f_back
+                if caller is not None:
+                    filename = os.path.basename(caller.f_code.co_filename)
+                    back = frame.f_back
+                    if back is not None:
+                        line = back.f_lineno
+
+            result = f"[{level_str}] [{time}] {filename}({line}): {description}\n"
             file.write(result)
 
 
