@@ -59,9 +59,13 @@ class System:
         """차량 조회 메뉴"""
         console.show_view_menu()
         print("\n> ", end="")
-        user_input = int(input())
+        input = System.get_menu_input(0, 4)
 
-        match user_input:
+        match input:
+            case -1:
+                console.clear()
+                print("[Error] 다시 입력하십시오.")
+                self.seq_view()
             case 0:  # 뒤로
                 console.clear()
                 self.seq_start()
