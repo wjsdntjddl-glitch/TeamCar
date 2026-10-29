@@ -44,10 +44,10 @@ class Car:
     @phone.setter
     def phone(self, value: str) -> None:
         phone = value.replace("-", "")
-        if not phone.isnumeric() and len(phone) != 11:
+        if not phone.isnumeric() or len(phone) != 11:
             raise ValueError("[Error] 연락처를 정확히 입력하십시오.")
 
-        self.__phone = value
+        self.__phone = phone
 
     @property
     def brand(self) -> str | None:
