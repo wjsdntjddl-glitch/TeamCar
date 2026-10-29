@@ -42,8 +42,8 @@ Log_Level=2
             # ../out/Config.ini 파일 읽기 후 _log_level 대입
             config = configparser.ConfigParser()
             config.read(self._config_path, encoding="utf-8")
-            self._log_level = config.get(
-                "Config", "Log_Level", fallback=self._log_level
+            Logger._log_level = config.get(
+                "Config", "Log_Level", fallback=Logger._log_level
             )
 
     def debug(self, description: str) -> None:
@@ -67,7 +67,7 @@ Log_Level=2
         """로그 작성 함수"""
 
         # Config의 로그 레벨보다 낮을 경우 로그 작성 취소
-        if level < int(cls._log_level):
+        if level < int(Logger._log_level):
             return
 
         # ../out/ 디렉터리 존재 여부 확인
