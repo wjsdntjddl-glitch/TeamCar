@@ -27,7 +27,6 @@ class Console:
     def align_text(cls, text: str, width: int) -> str:
         """문자열을 유니코드 문자열의 길이에 맞춰 정렬"""
         text = str(text)
-        print(wcswidth(text))
         return text + " " * max(0, width - wcswidth(text))
 
     def update_widths(self, cars: list[Car]) -> None:
@@ -145,7 +144,7 @@ class Console:
                     print("마지막 페이지입니다.")
 
             else:
-                print("잘못된 입력입니다.")
+                print("[Error] 0~2 사이의 숫자만 입력할 수 있습니다.")
 
     def show_view_detail(self):  # 상세 조회 화면
         print()
