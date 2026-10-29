@@ -62,7 +62,7 @@ class System:
         input = System.get_menu_input(0, 4)
 
         match input:
-            case -1:
+            case -1: # 잘못된 입력
                 console.clear()
                 print("[Error] 다시 입력하십시오.")
                 self.seq_view()
@@ -145,6 +145,7 @@ class System:
                     car.number = number
 
                 except ValueError as e:
+                    screen = 1
                     console.clear()
                     print(e)
 
