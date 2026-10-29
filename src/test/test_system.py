@@ -1,6 +1,3 @@
-import json
-from pathlib import Path
-
 from car import Car
 from car_manager import car_manager
 from system import system
