@@ -31,7 +31,7 @@ def test_logger_write():
     reset_config_file()
 
     logger.Logger()
-    logger.logger.log("테스트", logger.Logger.Level.INFO)
+    logger.logger.info("테스트")
 
     # 테스트 #1: 로그 파일 생성 여부 확인
     assert logger.Logger._log_path.exists()

@@ -10,33 +10,43 @@ class Console:
     def __init__(self):
         self.page = 1  # 현재 페이지
         self.page_size = 10  # 한 페이지에 출력할 차량 수
-        self.widths = [4, 4, 6, 4, 4]
+        self.headers = ["번호", "이름", "연락처", "차종", "색상"]
+        self.widths = [
+            wcswidth(header) for header in self.headers
+        ]  # 각 헤더의 가로 길이
 
-    def update_widths(self):
-        headers = ["번호", "이름", "연락처", "차종", "색상"]
+    @classmethod
+    def format_phone(cls, phone: str | None) -> str | None:
+        """연락처를 번호 문법에 맞춰 대시(-) 삽입"""
+        if phone is not None and len(phone) == 11 and phone.isdigit():
+            return f"{phone[:3]}-{phone[3:7]}-{phone[7:]}"
 
-        self.widths = [wcswidth(header) for header in headers]
+        return phone
 
-        for car in car_manager.data:
-            values = [car.number, car.name, self.format_phone(car.phone), car.brand, car.color]
+    @classmethod
+    def align_text(cls, text: str, width: int) -> str:
+        """문자열을 유니코드 문자열의 길이에 맞춰 정렬"""
+        text = str(text)
+        print(wcswidth(text))
+        return text + " " * max(0, width - wcswidth(text))
+
+    def update_widths(self, cars: list[Car]) -> None:
+        """헤더의 크기를 데이터의 최대 길이에 맞춰 변경"""
+        for car in cars:
+            values = [
+                car.number,
+                car.name,
+                Console.format_phone(car.phone),
+                car.brand,
+                car.color,
+            ]
 
             for i, value in enumerate(values):
                 self.widths[i] = max(self.widths[i], wcswidth(str(value)))
 
-    def format_phone(self,phone):
-        phone = str(phone).replace('-','')
-
-        if len(phone) == 11 and phone.isdigit():
-            return f'{phone[:3]}-{phone[3:7]}-{phone[7:]}'
-
-        return phone
-
-    def align_text(self, text, width):
-        text = str(text)
-        return text + " " * max(0, width - wcswidth(text))
-
-    def print_row(self, values):
-        self.update_widths()
+    def print_row(self, values) -> None:
+        """열 단위 문자열 출력"""
+        self.update_widths(car_manager.data)
         result = "|"
 
         for i in range(len(values)):
@@ -55,7 +65,8 @@ class Console:
         print("2. 관리")
         print("\n> ", end="")
 
-    def show_view_menu(self):  # 조회 메뉴 화면
+    def show_view_menu(self) -> None:
+        """조회 메뉴 화면"""
         print(" ")
         print("차량 관리 시스템")
         print("도움말: 숫자를 입력해 메뉴에 접근합니다. ex) 조회시 1 입력")
@@ -66,9 +77,10 @@ class Console:
         print("4. 차주 이름으로 차량 조회")
         print(" ")
 
-    def show_view_all(self):  # 전체 조회 화면
+    def show_view_all(self) -> None:
+        """전체 조회 화면"""
         self.clear()
-        self.update_widths()
+        self.update_widths(car_manager.data)
         total = len(car_manager.data)
 
         total_pages = max(1, (total + self.page_size - 1) // self.page_size)
@@ -92,7 +104,13 @@ class Console:
             page_cars = car_manager.data[start:end]
 
             for car in page_cars:
-                values = [car.number, car.name, self.format_phone(car.phone), car.brand, car.color]
+                values = [
+                    car.number,
+                    car.name,
+                    self.format_phone(car.phone),
+                    car.brand,
+                    car.color,
+                ]
 
                 self.print_row(values)
 
@@ -188,7 +206,13 @@ class Console:
         self.print_row(headers)
 
         for car in result:
-            values = [car.number, car.name, self.format_phone(car.phone), car.brand, car.color]
+            values = [
+                car.number,
+                car.name,
+                self.format_phone(car.phone),
+                car.brand,
+                car.color,
+            ]
 
             self.print_row(values)
 
@@ -224,7 +248,13 @@ class Console:
         self.print_row(headers)
 
         for car in result:
-            values = [car.number, car.name, self.format_phone(car.phone), car.brand, car.color]
+            values = [
+                car.number,
+                car.name,
+                self.format_phone(car.phone),
+                car.brand,
+                car.color,
+            ]
 
             self.print_row(values)
 

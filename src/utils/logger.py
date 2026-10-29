@@ -42,15 +42,32 @@ Log_Level=2
             # ../out/Config.ini 파일 읽기 후 _log_level 대입
             config = configparser.ConfigParser()
             config.read(self._config_path, encoding="utf-8")
-            self._log_level = config.get(
-                "Config", "Log_Level", fallback=self._log_level
+            Logger._log_level = config.get(
+                "Config", "Log_Level", fallback=Logger._log_level
             )
 
-    def log(self, description: str, level: Level = Level.INFO) -> None:
+    def debug(self, description: str) -> None:
+        """Debug 레벨로 로그 작성"""
+        self.write(description, Logger.Level.DEBUG)
+
+    def info(self, description: str) -> None:
+        """Info 레벨로 로그 작성"""
+        self.write(description, Logger.Level.INFO)
+
+    def warn(self, description: str) -> None:
+        """Warning 레벨로 로그 작성"""
+        self.write(description, Logger.Level.WARNING)
+
+    def error(self, description: str) -> None:
+            """Error 레벨로 로그 작성"""
+            self.write(description, Logger.Level.ERROR)
+
+    @classmethod
+    def write(cls, description: str, level: Level = Level.INFO) -> None:
         """로그 작성 함수"""
 
         # Config의 로그 레벨보다 낮을 경우 로그 작성 취소
-        if level < int(self._log_level):
+        if level < int(Logger._log_level):
             return
 
         # ../out/ 디렉터리 존재 여부 확인
@@ -76,18 +93,22 @@ Log_Level=2
                 case Logger.Level.ERROR:
                     level_str = "Error"
 
+            # 시간 포맷 지정
             time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+            # 실제 로그 작성 함수 호출자 <- 전달자를 찾는 과정
             frame = inspect.currentframe()
             filename = "UNK"
             line = "UNK"
             if frame is not None:
-                caller = frame.f_back
-                if caller is not None:
-                    filename = os.path.basename(caller.f_code.co_filename)
-                    back = frame.f_back
-                    if back is not None:
-                        line = back.f_lineno
+                delegator = frame.f_back
+                if delegator is not None:
+                    caller = delegator.f_back
+                    if caller  is not None:
+                        filename = os.path.basename(caller.f_code.co_filename)
+                        line = caller.f_lineno
 
+            # 로그 문자열 작성후 파일로 출력
             result = f"[{level_str}] [{time}] {filename}({line}): {description}\n"
             file.write(result)
 
