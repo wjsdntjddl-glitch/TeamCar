@@ -38,7 +38,7 @@ class System:
         match input:
             case -1:
                 console.clear()
-                print("[Error] 다시 입력하십시오.")
+                print(f"{console.get_print_error()} 다시 입력하십시오.")
                 self.seq_start()
             case 0:
                 console.clear()
@@ -53,6 +53,24 @@ class System:
     def seq_end(self) -> None:
         """프로그램 종료"""
         console.clear()
+        print("""
+    _______ _                 _                                 
+   |__   __| |               | |                                
+      | |  | |__   __ _ _ __ | | __   _   _  ___  _   _         
+      | |  | '_ \ / _` | '_ \| |/ /  | | | |/ _ \| | | |        
+      | |  | | | | (_| | | | |   <   | |_| | (_) | |_| |        
+      |_|  |_| |_|\__,_|_| |_|_|\_\   \__, |\___/ \__,_|        
+   _____                               __/ |       _            
+  / ____|                             |___/ |     | |           
+ | (___   ___  ___    _   _  ___  _   _   | | __ _| |_ ___ _ __ 
+  \___ \ / _ \/ _ \  | | | |/ _ \| | | |  | |/ _` | __/ _ \ '__|
+  ____) |  __/  __/  | |_| | (_) | |_| |  | | (_| | ||  __/ |   
+ |_____/ \___|\___|   \__, |\___/ \__,_|  |_|\__,_|\__\___|_|   
+                       __/ |                                    
+                      |___/                                     
+                                                                                        
+                                                                                        
+""")
         print("프로그램을 종료합니다.")
 
     def seq_view(self) -> None:
@@ -64,7 +82,8 @@ class System:
         match input:
             case -1: # 잘못된 입력
                 console.clear()
-                print("[Error] 다시 입력하십시오.")
+                console.print_error()
+                print(f"{console.get_print_error()} 다시 입력하십시오.")
                 self.seq_view()
             case 0:  # 뒤로
                 console.clear()
@@ -110,7 +129,8 @@ class System:
         match input:
             case -1:
                 console.clear()
-                print("[Error] 다시 입력하십시오.")
+                console.print_error()
+                print(f"{console.get_print_error()} 다시 입력하십시오.")
                 self.seq_manage()
             case 0:
                 console.clear()
@@ -139,7 +159,8 @@ class System:
                     if car_manager.is_duplicated(number):
                         screen = 1
                         console.clear()
-                        print("[Error] 중복된 차량 번호 입니다.")
+                        console.print_error()
+                        print(f"{console.get_print_error()} 중복된 차량 번호 입니다.")
                         continue
 
                     car.number = number
@@ -193,6 +214,7 @@ class System:
         car_manager.data.append(car)
         car_manager.save()
         console.clear()
+        console.print_cpl()
         print("등록이 완료됐습니다.")
         logger.info(f"[{car.number}] 차량 등록 완료")
         self.seq_manage()
@@ -209,14 +231,17 @@ class System:
 
         if car is None:
             console.clear()
-            print("[Error] 입력한 번호와 일치하는 차량이 없습니다.")
+            print(f"{console.get_print_error()} 입력한 번호와 일치하는 차량이 없습니다.")
             self.seq_manage()
             return
 
         console.clear()
         console.show_manage_modifiy(2, car)
         user_input = input()
-
+        if user_input == "0":
+            console.clear()
+            return self.seq_manage()
+        
         after = before = None
         try:
             print("\n수정사항을 입력하세요.\n\n> ", end="")
@@ -224,8 +249,7 @@ class System:
             match user_input:
                 case "1":
                     if car_manager.is_duplicated(after):
-                        raise ValueError("[Error] 중복된 차량 번호 입니다.")
-
+                        raise ValueError(f"{console.get_print_error()}\n중복된 차량 번호 입니다.")
                     before = car.number
                     car.number = after
                 case "2":
@@ -250,6 +274,7 @@ class System:
         console.clear()
         print(f"이전: {before}")
         print(f"이후: {after}")
+        console.print_cpl()
         print("수정이 완료됐습니다.")
         logger.info(f"'{before}' -> '{after}' 수정 완료")
         self.seq_manage()
@@ -263,11 +288,14 @@ class System:
             if car.number == number:
                 car_manager.data.remove(car)
                 car_manager.save()
+                console.print_cpl()
                 print(f"[{number}] 차량 정보를 삭제 했습니다.")
                 logger.info(f"[{number}] 차량 정보 삭제")
+                self.seq_manage()
                 return
 
         console.clear()
+        console.print_error()
         print("차량 정보를 찾지 못했습니다.")
 
         self.seq_manage()
