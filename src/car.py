@@ -16,12 +16,19 @@ class Car:
         self.__brand = brand
         self.__color = color
 
+    @classmethod
+    def is_empty_str(cls, value: str) -> bool:
+        return not value.strip()
+
     @property
     def number(self) -> str | None:
         return self.__number if self.__number is not None else None
 
     @number.setter
     def number(self, value: str) -> None:
+        if Car.is_empty_str(value):
+            raise ValueError("[Error] 필수 입력사항입니다.")
+        
         number = value.replace(" ", "")
         pattern = r"\d{2}\d?[가-힣]\d{4}$"
         if re.fullmatch(pattern, number) is None:
@@ -35,6 +42,9 @@ class Car:
 
     @name.setter
     def name(self, value: str) -> None:
+        if Car.is_empty_str(value):
+            raise ValueError("[Error] 필수 입력사항입니다.")
+        
         self.__name = value
 
     @property
@@ -43,6 +53,9 @@ class Car:
 
     @phone.setter
     def phone(self, value: str) -> None:
+        if Car.is_empty_str(value):
+            raise ValueError("[Error] 필수 입력사항입니다.")
+        
         phone = value.replace("-", "")
         if not phone.isnumeric() or len(phone) != 11:
             raise ValueError("[Error] 연락처를 정확히 입력하십시오.")
@@ -55,6 +68,9 @@ class Car:
 
     @brand.setter
     def brand(self, value: str) -> None:
+        if Car.is_empty_str(value):
+            raise ValueError("[Error] 필수 입력사항입니다.")
+        
         self.__brand = value
 
     @property
@@ -63,6 +79,9 @@ class Car:
 
     @color.setter
     def color(self, value: str) -> None:
+        if Car.is_empty_str(value):
+            raise ValueError("[Error] 필수 입력사항입니다.")
+        
         self.__color = value
 
     @staticmethod

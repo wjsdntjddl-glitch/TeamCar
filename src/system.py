@@ -145,6 +145,7 @@ class System:
                     car.number = number
 
                 except ValueError as e:
+                    screen = 1
                     console.clear()
                     print(e)
 
