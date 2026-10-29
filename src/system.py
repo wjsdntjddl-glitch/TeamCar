@@ -14,11 +14,11 @@ class System:
         user_input = input()
         try:
             if not user_input.isnumeric():
-                raise (TypeError)
+                raise TypeError
 
             int_input = int(user_input)
             if int_input < start or int_input > end:
-                raise (ValueError)
+                raise ValueError
 
         except TypeError:
             return -1
@@ -28,6 +28,7 @@ class System:
         return int_input
 
     def seq_load(self) -> None:
+        """JSON 파일 불러오기"""
         car_manager.load()
 
     def seq_start(self) -> None:

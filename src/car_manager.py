@@ -4,18 +4,17 @@ from pathlib import Path
 from car import Car
 from utils.logger import logger
 
-data_path = Path("out") / "data.json"
-
 
 class CarManager:
     def __init__(self) -> None:
         self.data: list[Car] = []
+        self.data_path = Path("out") / "data.json"
 
     def save(self) -> None:
-        if not data_path.parent.exists():
-            data_path.parent.mkdir(parents=True, exist_ok=True)
+        if not self.data_path.parent.exists():
+            self.data_path.parent.mkdir(parents=True, exist_ok=True)
 
-        with data_path.open("w", encoding="utf-8") as file:
+        with self.data_path.open("w", encoding="utf-8") as file:
             json.dump(
                 self.data,
                 file,
@@ -25,13 +24,13 @@ class CarManager:
             )
 
     def load(self) -> None:
-        if not data_path.exists():
-            logger.warn("JSON 파일을 경로 탐색 실패 / 경로: " + str(data_path.absolute()))
+        if not self.data_path.exists():
+            logger.warn("JSON 파일을 경로 탐색 실패 / 경로: " + str(self.data_path.absolute()))
             print("경고! JSON 파일이 없습니다.")
-            print(f"> {data_path.absolute()}")
+            print(f"> {self.data_path.absolute()}")
             return
 
-        with data_path.open("r", encoding="utf-8") as file:
+        with self.data_path.open("r", encoding="utf-8") as file:
             json_data: list[dict[str, str]] = json.load(file)
             for data in json_data:
                 car = Car(
