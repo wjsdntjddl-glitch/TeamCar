@@ -25,7 +25,8 @@ class CarManager:
 
     def load(self) -> None:
         if not data_path.exists():
-            print("JSON 파일이 없습니다.")
+            print("경고! JSON 파일이 없습니다.")
+            print(f"> {data_path}")
             return
 
         with data_path.open("r", encoding="utf-8") as file:
