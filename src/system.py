@@ -377,6 +377,7 @@ class System:
                 car_manager.save()
                 print(f"[{number}] 차량 정보를 삭제 했습니다.")
                 logger.info(f"[{number}] 차량 정보 삭제")
+                self.seq_manage()
                 return
 
         console.clear()
