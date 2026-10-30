@@ -42,7 +42,7 @@ class System:
 
     def seq_start(self) -> None:
         console.show_start_menu()
-        input = System.get_menu_input(0, 3)
+        input = System.get_menu_input(0, 2)
 
         match input:
             case -3:
