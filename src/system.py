@@ -340,7 +340,7 @@ class System:
                 case "3":
                     old = car.phone
                     car.phone = new_value
-                case "3":
+                case "4":
                     old = car.brand
                     car.brand = new_value
                 case "5":
