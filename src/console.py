@@ -190,7 +190,7 @@ class Console:
                 print(f"차종      : {car.brand}")
                 print(f"색상      : {car.color}")
                 print('-'*30)
-                print("이전으로 돌아가려면 아무키나 누르십시오.")
+                print("\n이전으로 돌아가려면 아무키나 누르십시오.")
                 msvcrt.getch()
                 self.clear()
                 return
@@ -251,6 +251,11 @@ class Console:
 
             self.print_row(values)
 
+        print("\n이전으로 돌아가려면 아무키나 누르십시오.")
+        msvcrt.getch()
+        self.clear()
+
+
     def show_view_by_name(self):  # 차주 이름으로 차량 조회 화면
         print()
         print("차량 관리 시스템 - (차주 이름으로 차량 조회)")
@@ -301,6 +306,10 @@ class Console:
             ]
 
             self.print_row(values)
+
+        print("\n이전으로 돌아가려면 아무키나 누르십시오.")
+        msvcrt.getch()
+        self.clear()
 
     def clear(self) -> None:
         """콘솔 화면 초기화"""
