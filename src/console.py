@@ -1,6 +1,6 @@
+import msvcrt
 import subprocess
 import time
-import msvcrt
 
 from wcwidth import wcswidth
 

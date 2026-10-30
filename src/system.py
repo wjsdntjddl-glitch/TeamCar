@@ -1,8 +1,9 @@
+import time
+
 from car import Car
 from car_manager import car_manager
 from console import console
 from utils.logger import logger
-import time
 
 
 class System:
