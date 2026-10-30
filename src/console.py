@@ -150,7 +150,14 @@ class Console:
             print("2. 다음 페이지")
             print()
 
-            choice = input("선택: ")
+            try:
+                choice = input("선택: ")
+            except EOFError:
+                self.clear()
+                return
+            except KeyboardInterrupt:
+                self.clear()
+                return
             self.clear()
 
             if choice == "0":
@@ -178,8 +185,16 @@ class Console:
         print("0. 뒤로")
         print()
 
-        number = input("> ").strip()
-        console.clear()
+        try:
+            number = input("> ").strip()
+        except EOFError:
+            self.clear()
+            return
+        except KeyboardInterrupt:
+            self.clear()
+            return
+        
+        self.clear()
 
         if number == "0":
             return
@@ -205,8 +220,15 @@ class Console:
         print("0. 뒤로")
         print()
 
-        brand = input("> ").strip()
-        console.clear()
+        try:
+            brand = input("> ").strip()
+        except EOFError:
+            self.clear()
+            return
+        except KeyboardInterrupt:
+            self.clear()
+            return
+        self.clear()
 
         if brand == "0":
             return
@@ -247,8 +269,15 @@ class Console:
         print("0. 뒤로")
         print()
 
-        name = input("> ").strip()
-        console.clear()
+        try:
+            name = input("> ").strip()
+        except EOFError:
+            self.clear()
+            return
+        except KeyboardInterrupt:
+            self.clear()
+            return
+        self.clear()
 
         if name == "0":
             return

@@ -10,9 +10,16 @@ class System:
 
     @classmethod
     def get_menu_input(cls, start: int, end: int) -> int:
-        """사용자 입력을 받아 정수로 변환하여 반환"""
-        user_input = input()
+        """
+        사용자 입력을 받아 정수로 변환하여 반환
+        Returns:
+            int:
+        **-1:** TypeError, ValueError <br>
+        **-2:** EOFError <br>
+        **-3:** KeyboardInterrupt
+        """
         try:
+            user_input = input()
             if not user_input.isnumeric():
                 raise TypeError
 
@@ -20,10 +27,12 @@ class System:
             if int_input < start or int_input > end:
                 raise ValueError
 
-        except TypeError:
+        except (TypeError, ValueError):
             return -1
-        except ValueError:
-            return -1
+        except EOFError:
+            return -2
+        except KeyboardInterrupt:
+            return -3
 
         return int_input
 
@@ -36,7 +45,10 @@ class System:
         input = System.get_menu_input(0, 3)
 
         match input:
-            case -1:
+            case -3:
+                console.clear()
+                self.seq_end()
+            case -1 | -2:
                 console.clear()
                 print(f"{console.get_print_error()} 다시 입력하십시오.")
                 self.seq_start()
@@ -80,6 +92,12 @@ class System:
         input = System.get_menu_input(0, 4)
 
         match input:
+            case -3:
+                console.clear()
+                self.seq_end()
+            case -2:
+                console.clear()
+                self.seq_start()
             case -1: # 잘못된 입력
                 console.clear()
                 console.print_error()
@@ -127,6 +145,12 @@ class System:
         input = System.get_menu_input(0, 3)
 
         match input:
+            case -3:
+                console.clear()
+                self.seq_end()
+            case -2:
+                console.clear()
+                self.seq_start()
             case -1:
                 console.clear()
                 console.print_error()
@@ -169,6 +193,14 @@ class System:
                     screen = 1
                     console.clear()
                     print(e)
+                except EOFError:
+                    console.clear()
+                    self.seq_manage()
+                    return
+                except KeyboardInterrupt:
+                    console.clear()
+                    self.seq_end()
+                    return
 
             elif screen == 2:
                 console.show_manage_register(2)
@@ -179,6 +211,14 @@ class System:
                     screen = 2
                     console.clear()
                     print(e)
+                except EOFError:
+                    console.clear()
+                    self.seq_manage()
+                    return
+                except KeyboardInterrupt:
+                    console.clear()
+                    self.seq_end()
+                    return
 
             elif screen == 3:
                 console.show_manage_register(3)
@@ -189,6 +229,14 @@ class System:
                     screen = 3
                     console.clear()
                     print(e)
+                except EOFError:
+                    console.clear()
+                    self.seq_manage()
+                    return
+                except KeyboardInterrupt:
+                    console.clear()
+                    self.seq_end()
+                    return
 
             elif screen == 4:
                 console.show_manage_register(4)
@@ -199,6 +247,14 @@ class System:
                     screen = 4
                     console.clear()
                     print(e)
+                except EOFError:
+                    console.clear()
+                    self.seq_manage()
+                    return
+                except KeyboardInterrupt:
+                    console.clear()
+                    self.seq_end()
+                    return
 
             elif screen == 5:
                 console.show_manage_register(5)
@@ -208,6 +264,14 @@ class System:
                     screen = 5
                     console.clear()
                     print(e)
+                except EOFError:
+                    console.clear()
+                    self.seq_manage()
+                    return
+                except KeyboardInterrupt:
+                    console.clear()
+                    self.seq_end()
+                    return
 
                 break
 
@@ -222,7 +286,17 @@ class System:
     def seq_manage_modifiy(self) -> None:
         """등록된 차량 요소 수정"""
         console.show_manage_modifiy(1)
-        number = input()
+        try:
+            number = input()
+        except EOFError:
+            console.clear()
+            self.seq_manage()
+            return
+        except KeyboardInterrupt:
+            console.clear()
+            self.seq_end()
+            return
+        
         car = None
         for item in car_manager.data:
             if number == item.number:
@@ -237,34 +311,61 @@ class System:
 
         console.clear()
         console.show_manage_modifiy(2, car)
-        user_input = input()
-        if user_input == "0":
-            console.clear()
-            return self.seq_manage()
-        
-        after = before = None
         try:
-            print("\n수정사항을 입력하세요.\n\n> ", end="")
-            after = input()
+            user_input = input()
+        except EOFError:
+            console.clear()
+            self.seq_manage()
+            return
+        except KeyboardInterrupt:
+            console.clear()
+            self.seq_end()
+            return
+
+
+        match user_input:
+            case "0":
+                console.clear()
+                self.seq_manage()
+                return
+            case "1" | "2" | "3" | "4" | "5":
+                print("\n수정사항을 입력하세요.\n\n> ", end="")
+                try:
+                    new_value = input()
+                except EOFError:
+                    console.clear()
+                    self.seq_manage()
+                    return
+                except KeyboardInterrupt:
+                    console.clear()
+                    self.seq_end()
+                    return
+            case _:
+                print("[Error] 잘못된 입력입니다.")
+                console.clear()
+                self.seq_manage()
+                return
+
+        try:
             match user_input:
                 case "1":
-                    if car_manager.is_duplicated(after):
+                    if car_manager.is_duplicated(new_value):
                         raise ValueError(f"{console.get_print_error()}\n중복된 차량 번호 입니다.")
-                    before = car.number
-                    car.number = after
-                case "2":
-                    before = car.name
-                    car.name = after
-                case "3":
-                    before = car.phone
-                    car.phone = after
-                case "4":
-                    before = car.brand
-                    car.brand = after
-                case "5":
-                    before = car.color
-                    car.color = after
 
+                    old = car.number
+                    car.number = new_value
+                case "2":
+                    old = car.name
+                    car.name = new_value
+                case "3":
+                    old = car.phone
+                    car.phone = new_value
+                case "3":
+                    old = car.brand
+                    car.brand = new_value
+                case "5":
+                    old = car.color
+                    car.color = new_value
         except ValueError as e:
             print(e)
             self.seq_manage()
@@ -272,17 +373,26 @@ class System:
 
         car_manager.save()
         console.clear()
-        print(f"이전: {before}")
-        print(f"이후: {after}")
         console.print_cpl()
-        print("수정이 완료됐습니다.")
-        logger.info(f"'{before}' -> '{after}' 수정 완료")
+        print(f"* 이전: {old}")
+        print(f"* 이후: {new_value}")
+        print("[-] 수정이 완료됐습니다.")
+        logger.info(f"'{old}' -> '{new_value}' 수정 완료")
         self.seq_manage()
 
     def seq_manage_remove(self) -> None:
         """등록된 차량 삭제"""
         console.show_manage_remove()
-        number = input()
+        try:
+            number = input()
+        except EOFError:
+            console.clear()
+            self.seq_manage()
+            return
+        except KeyboardInterrupt:
+            console.clear()
+            self.seq_end()
+            return
 
         for car in car_manager.data:
             if car.number == number:
@@ -296,7 +406,7 @@ class System:
 
         console.clear()
         console.print_error()
-        print("차량 정보를 찾지 못했습니다.")
+        print("[Error] 차량 정보를 찾지 못했습니다.")
 
         self.seq_manage()
 
