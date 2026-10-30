@@ -2,6 +2,7 @@ from car import Car
 from car_manager import car_manager
 from console import console
 from utils.logger import logger
+import time
 
 
 class System:
@@ -50,7 +51,9 @@ class System:
                 self.seq_end()
             case -1 | -2:
                 console.clear()
-                print(f"{console.get_fmt_err()}\n다시 입력하십시오.")
+                print(console.get_fmt_err()+"\n다시 입력하십시오.")
+                time.sleep(1.5)
+                console.clear()
                 self.seq_start()
             case 0:
                 console.clear()
@@ -83,7 +86,9 @@ class System:
                 self.seq_start()
             case -1: # 잘못된 입력
                 console.clear()
-                print(console.get_fmt_err() + "\n다시 입력하십시오.")
+                print(f"{console.get_fmt_err()}\n다시 입력하십시오.")
+                time.sleep(1.5)
+                console.clear()
                 self.seq_view()
             case 0:  # 뒤로
                 console.clear()
@@ -136,6 +141,8 @@ class System:
             case -1:
                 console.clear()
                 print(f"{console.get_fmt_err()}\n다시 입력하십시오.")
+                time.sleep(1.5)
+                console.clear()
                 self.seq_manage()
             case 0:
                 console.clear()
@@ -164,7 +171,9 @@ class System:
                     if car_manager.is_duplicated(number):
                         screen = 1
                         console.clear()
-                        print(f"{console.get_fmt_err()}\n중복된 차량 번호 입니다.")
+                        print(console.get_fmt_err()+"\n중복된 차량 번호 입니다.")
+                        time.sleep(1.5)
+                        console.clear()
                         continue
 
                     car.number = number
@@ -261,6 +270,8 @@ class System:
         print(console.get_fmt_cpl())
         print("등록이 완료됐습니다.")
         logger.info(f"[{car.number}] 차량 등록 완료")
+        time.sleep(1.5)
+        console.clear()
         self.seq_manage()
 
     def seq_manage_modifiy(self) -> None:
@@ -286,6 +297,8 @@ class System:
         if car is None:
             console.clear()
             print(f"{console.get_fmt_err()}\n입력한 번호와 일치하는 차량이 없습니다.")
+            time.sleep(1.5)
+            console.clear()
             self.seq_manage()
             return
 
@@ -321,7 +334,9 @@ class System:
                     self.seq_end()
                     return
             case _:
-                print("[Error] 잘못된 입력입니다.")
+                console.clear()
+                print(f"{console.get_fmt_err()}\n잘못된 입력입니다.")
+                time.sleep(1.5)
                 console.clear()
                 self.seq_manage()
                 return
@@ -330,6 +345,7 @@ class System:
             match user_input:
                 case "1":
                     if car_manager.is_duplicated(new_value):
+                        console.clear()
                         raise ValueError(f"{console.get_fmt_err()}\n중복된 차량 번호 입니다.")
 
                     old = car.number
@@ -348,6 +364,8 @@ class System:
                     car.color = new_value
         except ValueError as e:
             print(e)
+            time.sleep(1.5)
+            console.clear()
             self.seq_manage()
             return
 
@@ -357,6 +375,8 @@ class System:
         print(f"* 이전: {old}")
         print(f"* 이후: {new_value}")
         print("[-] 수정이 완료됐습니다.\n")
+        time.sleep(1.5)
+        console.clear()
         logger.info(f"'{old}' -> '{new_value}' 수정 완료")
         self.seq_manage()
 
@@ -378,15 +398,17 @@ class System:
             if car.number == number:
                 car_manager.data.remove(car)
                 car_manager.save()
-                print(console.get_fmt_cpl())
-                print(f"[{number}] 차량 정보를 삭제 했습니다.\n")
+                print(f"{console.get_fmt_cpl()}\n[{number}] 차량 정보를 삭제 했습니다.\n")
+                time.sleep(1.5)
+                console.clear()
                 logger.info(f"[{number}] 차량 정보 삭제")
                 self.seq_manage()
                 return
 
         console.clear()
-        print(console.get_fmt_err())
-        print("[Error] 차량 정보를 찾지 못했습니다.\n")
+        print(f"{console.get_fmt_err()}\n차량 정보를 찾지 못했습니다.\n")
+        time.sleep(1.5)
+        console.clear()
 
         self.seq_manage()
 

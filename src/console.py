@@ -1,4 +1,6 @@
 import subprocess
+import time
+import msvcrt
 
 from wcwidth import wcswidth
 
@@ -152,7 +154,10 @@ class Console:
                     print("마지막 페이지입니다.")
 
             else:
-                print("[Error] 0~2 사이의 숫자만 입력할 수 있습니다.")
+                print(f"{self.get_fmt_err()}\n0~2 사이의 숫자만 입력할 수 있습니다.")
+                time.sleep(1.5)
+                self.clear()
+                
 
     def show_view_detail(self):  # 상세 조회 화면
         print()
@@ -178,16 +183,22 @@ class Console:
         for car in car_manager.data:
             if car.number == number:
                 print()
+                print('-'*30)
                 print(f"차량 번호 : {car.number}")
                 print(f"이름      : {car.name}")
                 print(f"연락처    : {self.format_phone(car.phone)}")
                 print(f"차종      : {car.brand}")
                 print(f"색상      : {car.color}")
-                print()
+                print('-'*30)
+                print("이전으로 돌아가려면 아무키나 누르십시오.")
+                msvcrt.getch()
+                self.clear()
                 return
 
         print()
-        print("해당 차량 번호를 찾을 수 없습니다.")
+        print(f"{self.get_fmt_err()}\n해당 차량 번호를 찾을 수 없습니다.")
+        time.sleep(1.5)
+        self.clear()
 
     def show_view_by_brand(self):  # 차량 브랜드명 기준 조회 화면
         print()
@@ -220,7 +231,9 @@ class Console:
         print()
 
         if len(result) == 0:
-            print("해당 브랜드의 차량이 없습니다.")
+            print(f"{self.get_fmt_err()}해당 브랜드의 차량이 없습니다.")
+            time.sleep(1.5)
+            self.clear()
             return
 
         headers = ["번호", "이름", "연락처", "차종", "색상"]
@@ -269,7 +282,9 @@ class Console:
         print()
 
         if len(result) == 0:
-            print("해당 이름의 차주가 없습니다.")
+            print(f"{self.get_fmt_err()}\n해당 이름의 차주가 없습니다.")
+            time.sleep(1.5)
+            self.clear()
             return
 
         headers = ["번호", "이름", "연락처", "차종", "색상"]
