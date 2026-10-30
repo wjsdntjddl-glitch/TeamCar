@@ -118,3 +118,4 @@ class Car:
             "brand": from_obj.__brand,
             "color": from_obj.__color,
         }
+
